@@ -109,7 +109,7 @@ int main(){
 
       agent->lifetime(cbandit);
 
-      if(CHKAG){
+      if(CHKLN){
         agent->display_results(agent_id);
         delay(DELAY);
       }

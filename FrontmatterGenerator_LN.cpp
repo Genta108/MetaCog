@@ -108,6 +108,7 @@ int main(int argc, char** argv){
 			somalp = atoi(argv[opc+1]); opc++;
 		}
   }
+  STM = INFO_SIZE;
 
   //file name
   ostringstream oss_frontmatter;
@@ -150,7 +151,7 @@ int main(int argc, char** argv){
   fout_FM << endl;
 
   fout_FM << "//constant for Q-network" << endl;
-  fout_FM << "#define INPUTCELL "<< INFO_SIZE+2 << endl;  //+Stimuli+METAMEM+INTERVALCONUT
+  fout_FM << "#define INPUTCELL "<< INFO_SIZE+3 << endl;  //+Stimuli+PreAction+METAMEM+INTERVALCONUT
   fout_FM << "#define OUTPUTCELL "<< CHOICES+1 << endl;  //+checking behavior
   fout_FM << endl;
 
@@ -222,7 +223,7 @@ int main(int argc, char** argv){
   cout << endl;
 
   cout << "//constant for Q-network" << endl;
-  cout << "#define INPUTCELL "<< INFO_SIZE+2 << endl;  //+Stimuli+METAMEM+INTERVALCONUT
+  cout << "#define INPUTCELL "<< INFO_SIZE+3 << endl;  //+Stimuli+PreAction+METAMEM+INTERVALCONUT
   cout << "#define OUTPUTCELL "<< CHOICES+1 << endl;  //+information seeking
   cout << endl;
 

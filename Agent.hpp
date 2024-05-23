@@ -82,7 +82,13 @@ void Agent::init(ContextBandit *cbandit, unordered_map<string, double> ag_parame
 
     ql.set_parameter(ag_parameter);
     mlp.init_nn(INPUTCELL, ag_parameter["hiddencell"], OUTPUTCELL, ag_parameter["nnalpha"]);
-    som.init_som(ag_parameter["stmsize"], ag_parameter["somsize"], ag_parameter["nnalpha"]);
+    som.init_som(ag_parameter["stmsize"], ag_parameter["somsize"], ag_parameter["somalpha"]);
+    if(CHKAG){
+      for(int i = 0; i < TOTAL_PHENOTYPE; ++i){
+        cout << phenotype_name[i] << ": " << ag_parameter[phenotype_name[i]] << endl;
+      }
+      cout << endl;
+    }
 
     // som exposure for preparing
     for(int prexp = 0; prexp < EXPOSURE; ++prexp){

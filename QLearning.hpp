@@ -13,6 +13,7 @@
 //for Maintenance switch
 #define CHKRL 0
 #define CHKMLP 0
+#define DELAYTIME 0
 
 using std::string;
 using std::unordered_map;
@@ -73,12 +74,13 @@ class Reinforcement {
 
 //====================================== RL class realization =====================================//
 void Reinforcement::qlearning(ContextBandit *cbandit, NN &mlp, SOM &som) {
+  if(CHKRL) delay(DELAYTIME);
   init_state();  // all state initialize
 
   // vvv// Input&Waiting phase //vvv//
   cbandit->stimulus();  // input sample stimulus
   for (int i = 0; i < stmsize; ++i) memory_state[i] = cbandit->stimulus_image[cbandit->stimulus_num][i];
-  if (CHKRL) display_input();
+  if (CHKRL){display_input(); delay(DELAYTIME);}
   som.exposure(memory_state);
 
   // Waiting phase and bit invert noise
@@ -92,21 +94,24 @@ void Reinforcement::qlearning(ContextBandit *cbandit, NN &mlp, SOM &som) {
 
     greedy_flg = 1;
     for (int i = 0; i < stmsize; ++i) dataset[i] = memory_state[i];  // current stm state
-    if (ic) dataset[INFO_SIZE] = delay_count;
-    if (mtm) dataset[INFO_SIZE+1] = ambiguity;
+    if (ic) dataset[INFO_SIZE+1] = delay_count;
+    if (mtm) dataset[INFO_SIZE+2] = ambiguity;
 
-    if (CHKRL) cout << "choice greedy" << endl;
+    if (CHKRL){cout << "choice greedy" << endl; delay(DELAYTIME);}
     selected_action = greedy();
 
   } else {  // action set by q-value
   retake_point:
     greedy_flg = 0;
     for (int i = 0; i < INPUTCELL + OUTPUTCELL; ++i)  dataset[i] = 0;  // initialize
-    for (int i = 0; i < stmsize; ++i) dataset[i] = memory_state[i];  // input NN dataset
-    if (ic) dataset[INFO_SIZE] = delay_count;
-    if (mtm) dataset[INFO_SIZE+1] = ambiguity;
 
-    if (CHKRL) cout << "choice action by q-value" << endl;
+    // input NN dataset
+    for (int i = 0; i < stmsize; ++i) dataset[i] = memory_state[i];  
+    if (cb_flg) dataset[INFO_SIZE] = 1;
+    if (ic) dataset[INFO_SIZE+1] = delay_count;
+    if (mtm) dataset[INFO_SIZE+2] = ambiguity;
+
+    if (CHKRL){cout << "choice action by q-value" << endl; delay(DELAYTIME);}
     if (SOFTMAX) {
       selected_action = qsoftmax(dataset, mlp);
     } else {
@@ -117,18 +122,20 @@ void Reinforcement::qlearning(ContextBandit *cbandit, NN &mlp, SOM &som) {
 
   // v//state transition phase//v//
   if ((selected_action == 0) && (cb_time < 10)) {  // choosing checking behavior
-    if (CHKRL) cout << "--- for now CB ---" << endl;
+    if (CHKRL){cout << "--- for now CB ---" << endl; delay(DELAYTIME);}
 
     cb_flg = 1; cb_time++; delay_count = 0; ambiguity = 0;
     for (int i = 0; i < stmsize; ++i) memory_state[i] = cbandit->stimulus_image[cbandit->stimulus_num][i];
+    if (CHKRL){display_input(); delay(DELAYTIME);}
     som.exposure(memory_state);
     for(int i = 0; i < stmsize; ++i) memory_state[i] = som.somout[i];
 
     // input next dataset
     for (int i = 0; i < INPUTCELL + OUTPUTCELL; ++i) next_dataset[i] = 0;  // 0 reset
     for (int i = 0; i < stmsize; ++i) next_dataset[i] = memory_state[i];  // next stm state
-    if (ic) dataset[INFO_SIZE] = delay_count;
-    if (mtm) dataset[INFO_SIZE+1] = ambiguity;
+    if (cb_flg) next_dataset[INFO_SIZE] = 1; 
+    if (ic) next_dataset[INFO_SIZE+1] = delay_count;
+    if (mtm) next_dataset[INFO_SIZE+2] = ambiguity;
 
     mlp.output[0] = mlp.forward(0, dataset);
 
@@ -140,8 +147,9 @@ void Reinforcement::qlearning(ContextBandit *cbandit, NN &mlp, SOM &som) {
 
   } else if ((selected_action < CHOICES + 1) && (selected_action > 0)) {
 
-    if (CHKRL) cout << "Select " << selected_action << "!!" << endl;
-    if (CHKRL) cout << "Result: " << cbandit->judge(selected_action - 1) << endl;
+    if (CHKRL){cout << "Select " << selected_action-1 << "!!" << endl; delay(DELAYTIME);}
+    if (CHKRL&&(selected_action == 0)){cout << "Select CB!!" << endl; delay(DELAYTIME);}
+    if (CHKRL){cout << "Result: " << cbandit->judge(selected_action - 1) << endl; delay(DELAYTIME);}
 
     //---------------- reward function -------------------//
     if(cbandit->judge(selected_action - 1) > 0){
@@ -155,11 +163,14 @@ void Reinforcement::qlearning(ContextBandit *cbandit, NN &mlp, SOM &som) {
     //----------------------------------------------------//
 
     if (met) {
-      if (CHKRL) cout << "Success!! Reward: " << reinforcer << endl;
+      if (CHKRL){
+        if (cb_flg == 0){cout << "Oh!!!! Success!!!!!!!! Reward: " << reinforcer << endl; delay(DELAYTIME);}
+        else if(cb_flg){cout << "WOW!!!!! My god!!!!!!!! Success using CB!!!!!!!!!!! Nice!! Nice!!! Niceeeee!!!!!!! Reward: " << reinforcer << endl; delay(DELAYTIME);}
+        }
     } else if (punish) {
-      if (CHKRL) cout << "Punish!! Reward: " << reinforcer << endl;
+      if (CHKRL){cout << "Punish!! Reward: " << reinforcer << endl; delay(DELAYTIME);}
     }else {
-      if (CHKRL) cout << "Failed..." << endl;
+      if (CHKRL){cout << "Failed..." << endl; delay(DELAYTIME);}
     }
 
   } else if (cb_time < 10) {
@@ -171,7 +182,7 @@ void Reinforcement::qlearning(ContextBandit *cbandit, NN &mlp, SOM &som) {
 
   // v//update Q-network phase//v//
   if (selected_action && (cb_time < 10)) {
-    if (CHKRL) cout << "--- for now action ---" << endl;
+    if (CHKRL){cout << "--- for now action ---" << endl; delay(DELAYTIME);}
 
     mlp.output[selected_action] = mlp.forward(selected_action, dataset); //calc. currect dataset qv
 
@@ -179,7 +190,7 @@ void Reinforcement::qlearning(ContextBandit *cbandit, NN &mlp, SOM &som) {
     mlp.olearn(selected_action, dataset);
     mlp.hlearn(selected_action, dataset);
 
-    if (CHKRL) { cout << "**QL POST CHECK**" << endl; qmax(dataset, mlp);}
+    if (CHKRL) { cout << "**QL POST CHECK**" << endl; qmax(dataset, mlp); delay(DELAYTIME);}
   } else {
     if (CHKRL) cout << "IS limit!!" << endl;
   }
@@ -223,7 +234,7 @@ void Reinforcement::interval(SOM &som){
   }
   sum_ambiguity = ambiguity;
 
-  if (CHKRL) display_noisedstm();
+  if (CHKRL){display_noisedstm();delay(DELAYTIME);}
 }
 
 
@@ -239,8 +250,8 @@ int Reinforcement::qsoftmax(double data[], NN &mlp) {
   double sum, roulette_index;
   int action_index;
   double ps_a[CHOICES + 1];
-  for(int i = 0; i < stmsize; i++) e[i] = data[i];
-
+  for(int i = 0; i < INPUTCELL; i++) e[i] = data[i];
+  
   // comparing q-value
   sum = 0;
   for (int i = 0; i < CHOICES + 1; ++i) {  // i = 0: information seeking
@@ -267,7 +278,13 @@ int Reinforcement::qmax(double data[], NN &mlp) {
   double action_q = 0;
   double action_maxq = 0;
   int action_index = 0;
-  for(int i = 0; i < stmsize; i++) e[i] = data[i];
+
+  if (CHKRL) cout << "dataset: ";
+  for(int i = 0; i < INPUTCELL; i++){
+    if (CHKRL) cout << data[i];
+    e[i] = data[i];
+  }
+  if (CHKRL) cout << endl;
 
   // comparing q-value
   for (int i = 0; i < CHOICES + 1; ++i) {

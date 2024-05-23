@@ -33,7 +33,8 @@
 #include "./SCORE.hpp"   //Scoring class for statistics through generations
 #include "./Agent.hpp"
 
-#define CHKLN 0
+#define CHKLN 1
+#define DALAY 100
 
 //standerd class
 using std::cout;

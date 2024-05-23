@@ -13,7 +13,7 @@
 #include "./Agent.hpp"
 
 //for Maintenance switch
-#define CHKEVO 1
+#define CHKEVO 0
 #define GEN_SKIP 1000 //generation skip
 #define DELAY 0 //10-200
 

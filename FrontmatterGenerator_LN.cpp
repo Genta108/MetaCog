@@ -15,7 +15,7 @@ int RL_SW = 0;
 
 //simulation
 int TOTAL_PARAMETER = 20; //Total parameter of this simulation
-int SAMPLE = 10;
+int SAMPLE = 1;
 int AGENTS = 100;  //Number of agents
 
 //constant for task
@@ -170,8 +170,8 @@ int main(int argc, char** argv){
 	fout_FM << "double parameter_value[" << TOTAL_PARAMETER << "] = {";
 	fout_FM << AGENTS << CHOICES << "," << STIMULI << "," << INFO_SIZE << "," << WAITING_TIME << ",";
 	fout_FM << NOISE_RATE << "," << REWARD << "," << PUNISH << ",";
-	fout_FM << ACTION_LIMIT << "," << SOFTMAX << ","  << WTRANDOM << "," << STM_INIT << "," << CB_COST << "," << EXPOSURE << ",";
-	fout_FM <<  << "," <<  << "," << ;
+	fout_FM << ACTION_LIMIT << "," << SOFTMAX << ","  << WTRANDOM << "," << CB_COST << "," << EXPOSURE << ",";
+	fout_FM << QLeps << "," << QLalp << "," << QLgam << "," << hidcell << "," << nnalp << "," << somsize << "," << somalp;
 	fout_FM << "};" << endl;
 
   fout_FM << "string phenotype_name[" << TOTAL_PHENOTYPE << "] = {";
@@ -186,29 +186,18 @@ int main(int argc, char** argv){
 	fout_FM << "\"waiting\"" << "," << "\"ambiguity\"";
 	fout_FM << "};" << endl;
 
-  fout_FM << "string evo_results_name[" << TOTAL_EVO_RESULTS << "] = {";
-	fout_FM << "\"AveFitness\"" << "," << "\"MaxFitness\"" << "," << "\"AveMet\"" << "," << "\"FinalMet\"" << ",";
-	fout_FM << "\"RateCB\"" << "," << "\"UseCB\"" << "," << "\"EffectCB\"" << "," << "\"LossCB\"" << "," << "\"Ambiguity\"" << ",";
-  fout_FM << "\"ShareIC\"" << "," << "\"ShareMTM\"" << "," << "\"ShareICMTM\"" << "," << "\"ShareBare\"" << ",";
-  fout_FM << "\"STMsize\"" << ",";
-	fout_FM << "\"QLeps\"" << "," << "\"QLalp\"" << "," << "\"QLgam\"" << "," << "\"hidcell\"" << "," << "\"nnalp\"" << "," << "\"somsize\"" << "," << "\"somalp\"" << ",";
-  fout_FM << "\"hamming\"" << "};" << endl;
 
-  fout_FM << "string directory_name = \"" << "ev" << EVALUATION << "_ag" << AGENTS << "_gn" << GENERATION << "_mt" << MT_RATE;
+  fout_FM << "string directory_name = \""<< "ag" << AGENTS;
   fout_FM << "_inf" << INFO_SIZE << "_act" << ACTION_LIMIT << "_sm" << SOFTMAX << "_st" << STIMULI << "_ch" << CHOICES;
   fout_FM << "_wt" << WAITING_TIME << "_nr" << NOISE_RATE << "_stmi" << STM_INIT << "_rw" << REWARD << "_pn" << PUNISH << "_cbc" << CB_COST << "_exp" << EXPOSURE;
-  fout_FM << "_icc" << IC_COST << "_mtmc" << MTM_COST << "_stmc" << STM_COST << "\";";  //basic file name;
+  fout_FM << "_qle" << QLeps << "_qla" << QLalp << "_qlg" << QLgam << "_hid" << hidcell << "_nna" << nnalp << "_soms" << somsize << "_soma" << somalp << "\";";  //basic file name;
 
   fout_FM.close();
 
   cout << "//+++++ Macro.h +++++//" << endl;
   cout << "//constant for evolution" << endl;
-  cout << "#define EVALUATION " << EVALUATION << endl;
-  cout << "#define AGENTS " << AGENTS << endl;
-  cout << "#define GENERATION " << GENERATION << endl;
   cout << "#define SAMPLE " << SAMPLE << endl;
-  cout << "#define FROM " << FROM << endl;
-  cout << "#define MT_RATE " << MT_RATE << endl;
+  cout << "#define AGENTS " << AGENTS << endl;
   cout << endl;
 
   cout << "//constant for task" << endl;
@@ -229,9 +218,9 @@ int main(int argc, char** argv){
   cout << "#define STM_DEV " << INFO_SIZE-STM_INIT << endl;
   cout << "#define CB_COST " << CB_COST << endl;
   cout << "#define EXPOSURE " << EXPOSURE << endl;
-  cout << "#define IC_COST " << IC_COST << endl;
-  cout << "#define MTM_COST " << MTM_COST << endl;
-  cout << "#define STM_COST " << STM_COST << endl;
+  cout << "#define QLeps " << QLeps << endl;
+  cout << "#define QLalp " << QLalp << endl;
+  cout << "#define QLgam " << QLgam << endl;
   cout << endl;
 
   cout << "//constant for Q-network" << endl;

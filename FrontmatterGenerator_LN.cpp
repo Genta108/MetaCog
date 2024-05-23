@@ -124,6 +124,7 @@ int main(int argc, char** argv){
   fout_FM << "#define MTM_SW " << MTM_SW << endl;
 
   fout_FM << "#define TOTAL_PARAMETER " << TOTAL_PARAMETER << endl;
+  fout_FM << "#define SAMPLE " << SAMPLE << endl;
   fout_FM << "#define AGENTS " << AGENTS << endl;
   fout_FM << endl;
 
@@ -168,7 +169,7 @@ int main(int argc, char** argv){
 	fout_FM << "\"QLeps\"" << "," << "\"QLalpha\"" << "," << "\"QLgamma\"" << "," << "\"hiddencell\"" << "," << "\"NNalpha\"" << "," << "\"SOMsize\"" << "," << "\"SOMalpha\"";
 	fout_FM << "};" << endl;
 	fout_FM << "double parameter_value[" << TOTAL_PARAMETER << "] = {";
-	fout_FM << AGENTS << CHOICES << "," << STIMULI << "," << INFO_SIZE << "," << WAITING_TIME << ",";
+	fout_FM << AGENTS << "," << CHOICES << "," << STIMULI << "," << INFO_SIZE << "," << WAITING_TIME << ",";
 	fout_FM << NOISE_RATE << "," << REWARD << "," << PUNISH << ",";
 	fout_FM << ACTION_LIMIT << "," << SOFTMAX << ","  << WTRANDOM << "," << CB_COST << "," << EXPOSURE << ",";
 	fout_FM << QLeps << "," << QLalp << "," << QLgam << "," << hidcell << "," << nnalp << "," << somsize << "," << somalp;

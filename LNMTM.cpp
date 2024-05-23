@@ -71,8 +71,10 @@ int main(){
   make_directory();  //make a directory which correcpond a parameter
 
   //========== sample loop ===========//
-  for(int seed = FROM; seed < SAMPLE; seed++){
+  for(int seed = 0; seed < SAMPLE; seed++){
     //learning score initialization
+    Score *ln_score = new Score();
+    ofstream ln_print(lnpath.c_str());  //file io
     ln_score->init(ln_results_name, TOTAL_LN_RESULTS);
     ln_score->heading(ln_print);
 

@@ -162,7 +162,7 @@ int main(int argc, char** argv){
   fout_FM << endl;
 
 	fout_FM << "string parameter_name[" << TOTAL_PARAMETER << "] = {";
-	fout_FM << "\"EVALUATION\"" << "," << "\"AGENTS\"" << "," << "\"GENERATION\"" << "," << "\"MT_RATE\"" << ",";
+	fout_FM << "\"AGENTS\"" << ",";
 	fout_FM << "\"CHOICES\"" << "," << "\"STIMULI\"" << "," << "\"INFO_SIZE\""<< "," << "\"WAITING_TIME\"" << ",";
 	fout_FM << "\"NOISE_RATE\"" << "," << "\"REWARD\"" << "," << "\"PUNISH\"" << ",";
 	fout_FM << "\"ACTION_LIMIT\"" << "," << "\"SOFTMAX\"" << "," << "\"WTRANDOM\"" << "," << "\"CB_COST\"" << "," << "\"EXPOSURE\"" << ",";
@@ -182,9 +182,9 @@ int main(int argc, char** argv){
 	fout_FM << "};" << endl;
 
   fout_FM << "double phenotype[" << TOTAL_PHENOTYPE << "] = {";
-	fout_FM << "ic" << "," << "mtm" << "," << "stmsize" << ",";
-	fout_FM << "qleps" << "," << "qlalpha" << "," << "qlgamma"<< ",";
-	fout_FM << "hiddencell" << "," << "nnalpha" << "," << "somsize" << "," << "somalpha";
+	fout_FM << IC_SW << "," << MTM_SW << "," << STM << ",";
+	fout_FM << QLeps << "," << QLalp << "," << QLgam << ",";
+	fout_FM << hidcell << "," << nnalp << "," << somsize << "," << somalp;
 	fout_FM << "};" << endl;
 
   fout_FM << "string ln_results_name[" << TOTAL_LN_RESULTS << "] = {";

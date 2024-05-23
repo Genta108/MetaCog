@@ -62,28 +62,30 @@ namespace{
 
   void make_directory();
   int make_file(int seed);
+  void delay(int x);   //delay function
+  int tarai(int x, int y, int z);  //delay subfunction
 }
 
 
 //#################################################### main ###################################################//
 int main(){
   Agent *agent = new Agent();  //learning census
+  ContextBandit *cbandit = new ContextBandit();  //task class
+  Score *ln_score = new Score();
   make_directory();  //make a directory which correcpond a parameter
 
   //========== sample loop ===========//
   for(int seed = 0; seed < SAMPLE; seed++){
     //learning score initialization
-    Score *ln_score = new Score();
-    ofstream ln_print(lnpath.c_str());  //file io
+    ofstream ln_print(ln_filepath.c_str());  //file io
     ln_score->init(ln_results_name, TOTAL_LN_RESULTS);
     ln_score->heading(ln_print);
 
     initrand(seed); //random generator initialize
 
     //task initialization
-    ContextBandit *cbandit = new ContextBandit();  //task class
     cbandit->init(); //loading parameter
-    ofstream task_print(taskpath.c_str());
+    ofstream task_print(task_filepath.c_str());
     cbandit->printing(task_print);
     if (CHKLN) cbandit->disptemplete();
 
@@ -177,6 +179,14 @@ namespace{
       cout << "skip " << seed << " | ";
       return 1;
     }
+  }
+
+  //delay method
+  void delay(int x){for(int d = 0; d < x; ++d) tarai(13, 6, 1);}
+
+  int tarai(int x, int y, int z){
+    if(x <= y) return y;
+    return tarai(tarai(x-1, y, z), tarai(y-1, z, x), tarai(z-1, x, y));
   }
 
 }

@@ -79,7 +79,8 @@ int main(){
     //learning score initialization
     ofstream ln_print(ln_filepath.c_str());  //file io
     ln_score->init(ln_results_name, TOTAL_LN_RESULTS);
-    ln_score->heading(ln_print);
+    ln_print << "episode," << "reward," << "met," << "cbtime," << "cbloss," << "cbeffect,";
+    ln_print << "delay," << "ambiguity" << endl;
 
     initrand(seed); //random generator initialize
 
@@ -108,13 +109,8 @@ int main(){
         delay(DELAY);
       }
 
-      double results_container[TOTAL_LN_RESULTS] = {};
-      ln_score->counting(results_container);
     }
 
-    ofstream ln_print(lnpath.c_str());  //file io
-    ln_print << "episode," << "reward," << "met," << "cbtime," << "cbloss," << "cbeffect,";
-    ln_print << "delay," << "ambiguity" << endl;
     agent->ep_generation_ave();
     for (int t = 0; t < ACTION_LIMIT; ++t){
       ln_print << t + 1;

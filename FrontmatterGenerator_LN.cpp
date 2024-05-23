@@ -181,6 +181,12 @@ int main(int argc, char** argv){
 	fout_FM << "\"hiddencell\"" << "," << "\"nnalpha\"" << "," << "\"somsize\"" << "," << "\"somalpha\"";
 	fout_FM << "};" << endl;
 
+  fout_FM << "double phenotype[" << TOTAL_PHENOTYPE << "] = {";
+	fout_FM << "ic" << "," << "mtm" << "," << "stmsize" << ",";
+	fout_FM << "qleps" << "," << "qlalpha" << "," << "qlgamma"<< ",";
+	fout_FM << "hiddencell" << "," << "nnalpha" << "," << "somsize" << "," << "somalpha";
+	fout_FM << "};" << endl;
+
   fout_FM << "string ln_results_name[" << TOTAL_LN_RESULTS << "] = {";
 	fout_FM << "\"rewards\"" << "," << "\"met\"" << ",";
 	fout_FM << "\"cbtime\"" << "," << "\"cbloss\"" << "," << "\"cbeffect\"" << ",";

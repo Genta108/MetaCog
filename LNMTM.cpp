@@ -34,7 +34,7 @@
 #include "./Agent.hpp"
 
 #define CHKLN 1
-#define DALAY 100
+#define DELAY 100
 
 //standerd class
 using std::cout;
@@ -97,11 +97,15 @@ int main(){
 
     cout << endl << "[START - sample: " << seed << "]" << endl;
 
+    //agent initialization
     agent->init_episodes();
+    for(int i = 0; i < TOTAL_PHENOTYPE; ++i){
+      ag_parameter[phenotype_name[i]] = phenotype[i];
+    }
 
     for(int agent_id = 0; agent_id < AGENTS; agent_id++){
       ln_score->init_line();
-      agent->init(cbandit, phenotype);
+      agent->init(cbandit, ag_parameter);
 
       agent->lifetime(cbandit);
 

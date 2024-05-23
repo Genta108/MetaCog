@@ -214,7 +214,6 @@ int main(int argc, char** argv){
   cout << "#define ACTION_LIMIT " << ACTION_LIMIT << endl;
   cout << "#define SOFTMAX " << SOFTMAX << endl;
   cout << "#define WTRANDOM " << WTRANDOM << endl;
-  cout << "#define STM_DEV " << INFO_SIZE-STM_INIT << endl;
   cout << "#define CB_COST " << CB_COST << endl;
   cout << "#define EXPOSURE " << EXPOSURE << endl;
   cout << "#define QLeps " << QLeps << endl;

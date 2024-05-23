@@ -17,13 +17,13 @@ using namespace std;
 #define CHOICES 4
 #define STIMULI 4
 #define INFO_SIZE 5
-#define WAITING_TIME 1
+#define WAITING_TIME 5
 #define NOISE_RATE 0.1
 #define REWARD 2
 #define PUNISH 1
 
 //constant for agent
-#define ACTION_LIMIT 10000
+#define ACTION_LIMIT 6000
 #define SOFTMAX 0
 #define WTRANDOM 0
 #define STM_DEV 0
@@ -40,12 +40,12 @@ using namespace std;
 #define TOTAL_EVO_RESULTS 22
 
 //constant for Q-network
-#define INPUTCELL 7
+#define INPUTCELL 8
 #define OUTPUTCELL 5
 
 string parameter_name[20] = {"EVALUATION","AGENTS","GENERATION","MT_RATE","CHOICES","STIMULI","INFO_SIZE","WAITING_TIME","NOISE_RATE","REWARD","PUNISH","ACTION_LIMIT","SOFTMAX","WTRANDOM","STM_INIT","CB_COST","EXPOSURE","IC_COST","MTM_COST","STM_COST"};
-double parameter_value[20] = {2,100,5000,0.001,4,4,5,1,0.1,2,1,10000,0,0,5,0.1,0,0.05,0.1,0.01};
+double parameter_value[20] = {2,100,5000,0.001,4,4,5,5,0.1,2,1,6000,0,0,5,0.1,0,0.05,0.1,0.01};
 string phenotype_name[10] = {"ic","mtm","stmsize","qleps","qlalpha","qlgamma","hiddencell","nnalpha","somsize","somalpha"};
 string ln_results_name[7] = {"rewards","met","cbtime","cbloss","cbeffect","waiting","ambiguity"};
 string evo_results_name[22] = {"AveFitness","MaxFitness","AveMet","FinalMet","RateCB","UseCB","EffectCB","LossCB","Ambiguity","ShareIC","ShareMTM","ShareICMTM","ShareBare","STMsize","QLeps","QLalp","QLgam","hidcell","nnalp","somsize","somalp","hamming"};
-string directory_name = "ev2_ag100_gn5000_mt0.001_inf5_act10000_sm0_st4_ch4_wt1_nr0.1_stmi5_rw2_pn1_cbc0.1_exp0_icc0.05_mtmc0.1_stmc0.01";
+string directory_name = "ev2_ag100_gn5000_mt0.001_inf5_act6000_sm0_st4_ch4_wt5_nr0.1_stmi5_rw2_pn1_cbc0.1_exp0_icc0.05_mtmc0.1_stmc0.01";

@@ -146,13 +146,6 @@ int main(int argc, char** argv){
   fout_FM << "#define EXPOSURE " << EXPOSURE << endl;
   fout_FM << endl;
   fout_FM << "#define TOTAL_PHENOTYPE " << TOTAL_PHENOTYPE << endl;
-  fout_FM << "#define QLeps " << QLeps << endl;
-  fout_FM << "#define QLalp " << QLalp << endl;
-  fout_FM << "#define QLgam " << QLgam << endl;
-  fout_FM << "#define hidcell " << hidcell << endl;
-  fout_FM << "#define nnalp " << nnalp << endl;
-  fout_FM << "#define somsize " << somsize << endl;
-  fout_FM << "#define somalp " << somalp << endl;
   fout_FM << "#define TOTAL_LN_RESULTS " << TOTAL_LN_RESULTS << endl;
   fout_FM << endl;
 

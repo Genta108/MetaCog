@@ -164,8 +164,8 @@ int main(int argc, char** argv){
 	fout_FM << "\"EVALUATION\"" << "," << "\"AGENTS\"" << "," << "\"GENERATION\"" << "," << "\"MT_RATE\"" << ",";
 	fout_FM << "\"CHOICES\"" << "," << "\"STIMULI\"" << "," << "\"INFO_SIZE\""<< "," << "\"WAITING_TIME\"" << ",";
 	fout_FM << "\"NOISE_RATE\"" << "," << "\"REWARD\"" << "," << "\"PUNISH\"" << ",";
-	fout_FM << "\"ACTION_LIMIT\"" << "," << "\"SOFTMAX\"" << "," << "\"WTRANDOM\"" << "," << "\"STM_INIT\"" << "," << "\"CB_COST\"" << "," << "\"EXPOSURE\"" << ",";
-	fout_FM << "\"IC_COST\"" << "," << "\"MTM_COST\"" << "," << "\"STM_COST\"";
+	fout_FM << "\"ACTION_LIMIT\"" << "," << "\"SOFTMAX\"" << "," << "\"WTRANDOM\"" << "," << "\"CB_COST\"" << "," << "\"EXPOSURE\"" << ",";
+	fout_FM << "\"QLeps\"" << "," << "\"QLalpha\"" << "," << "\"QLgamma\"" << "," << "\"hiddencell\"" << "," << "\"NNalpha\"" << "," << "\"SOMsize\"" << "," << "\"SOMalpha\"";
 	fout_FM << "};" << endl;
 	fout_FM << "double parameter_value[" << TOTAL_PARAMETER << "] = {";
 	fout_FM << AGENTS << CHOICES << "," << STIMULI << "," << INFO_SIZE << "," << WAITING_TIME << ",";
@@ -189,7 +189,7 @@ int main(int argc, char** argv){
 
   fout_FM << "string directory_name = \""<< "ag" << AGENTS;
   fout_FM << "_inf" << INFO_SIZE << "_act" << ACTION_LIMIT << "_sm" << SOFTMAX << "_st" << STIMULI << "_ch" << CHOICES;
-  fout_FM << "_wt" << WAITING_TIME << "_nr" << NOISE_RATE << "_stmi" << STM_INIT << "_rw" << REWARD << "_pn" << PUNISH << "_cbc" << CB_COST << "_exp" << EXPOSURE;
+  fout_FM << "_wt" << WAITING_TIME << "_nr" << NOISE_RATE << "_rw" << REWARD << "_pn" << PUNISH << "_cbc" << CB_COST << "_exp" << EXPOSURE;
   fout_FM << "_qle" << QLeps << "_qla" << QLalp << "_qlg" << QLgam << "_hid" << hidcell << "_nna" << nnalp << "_soms" << somsize << "_soma" << somalp << "\";";  //basic file name;
 
   fout_FM.close();
@@ -204,7 +204,6 @@ int main(int argc, char** argv){
   cout << "#define CHOICES " << CHOICES  << endl;
   cout << "#define STIMULI " << STIMULI << endl;
   cout << "#define INFO_SIZE " << INFO_SIZE << endl;
-  cout << "#define STM_INIT " << STM_INIT << endl;
   cout << "#define WAITING_TIME " << WAITING_TIME << endl;
   cout << "#define NOISE_RATE " << NOISE_RATE << endl;
   cout << "#define REWARD " << REWARD << endl;
@@ -231,11 +230,10 @@ int main(int argc, char** argv){
   cout << "argument example is bellow:" << endl;
   cout << "./frontmatter";
   cout << " -rsw " << RL_SW << " -isw " << IC_SW << " -msw " << MTM_SW;
-	cout << " -ev " << EVALUATION << " -ag " << AGENTS << " -gen " << GENERATION << " -mt " << MT_RATE;
-	cout << " -ch " << CHOICES << " -st " << STIMULI << " -inf " << INFO_SIZE << " -wt " << WAITING_TIME;
+	cout << " -ag " << AGENTS << " -ch " << CHOICES << " -st " << STIMULI << " -inf " << INFO_SIZE << " -wt " << WAITING_TIME;
 	cout << " -nr " << NOISE_RATE << " -rw " << REWARD << " -pn " << PUNISH;
-	cout << " -act " << ACTION_LIMIT << " -sm " << SOFTMAX << " -wtr " << WTRANDOM << " -stmi " << STM_INIT << " -cbc " << CB_COST << " -exp " << EXPOSURE;
-	cout << " -icc " << IC_COST << " -mtmc " << MTM_COST << " -stmc " << STM_COST << endl;
+	cout << " -act " << ACTION_LIMIT << " -sm " << SOFTMAX << " -wtr " << WTRANDOM << " -cbc " << CB_COST << " -exp " << EXPOSURE;
+	cout << " -qle " << QLeps << " -qla " << QLalp << " -qlg " << QLgam << " -hid " << hidcell << " -nna " << nnalp << " -soms " << somsize << " -soma " << somalp << endl;
   cout << endl;
 }
 //====================================================================================================//

@@ -94,6 +94,7 @@ void Reinforcement::qlearning(ContextBandit *cbandit, NN &mlp, SOM &som) {
 
     greedy_flg = 1;
     for (int i = 0; i < stmsize; ++i) dataset[i] = memory_state[i];  // current stm state
+    if (cb_flg) dataset[INFO_SIZE] = 0;
     if (ic) dataset[INFO_SIZE+1] = delay_count;
     if (mtm) dataset[INFO_SIZE+2] = ambiguity;
 

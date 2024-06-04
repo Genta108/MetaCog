@@ -218,12 +218,12 @@ void GeneticAlgorithm::evaluation(Score *evo_score, ContextBandit *cbandit, stri
 
   if(((generation+1) % GEN_SKIP) == 0){
     ofstream ln_print(lnpath.c_str());  //file io
-    ln_print << "episode," << "reward," << "met," << "cbtime," << "cbloss," << "cbeffect,";
+    ln_print << "episode," << "reward," << "met," << "cbuse," << "cbloss," << "cbeffect,";
     ln_print << "delay," << "ambiguity" << endl;
     agent->ep_generation_ave();
     for (int t = 0; t < ACTION_LIMIT; ++t){
       ln_print << t + 1;
-      ln_print << "," << agent->ep_reward[t] << "," << agent->ep_met[t] << "," << agent->ep_cbtime[t];
+      ln_print << "," << agent->ep_reward[t] << "," << agent->ep_met[t] << "," << agent->ep_cbuse[t];
       ln_print << "," << agent->ep_cbloss[t] << "," << agent->ep_cbeffect[t] << "," << agent->ep_waiting[t] << "," << agent->ep_ambiguity[t];
       ln_print << endl;
     }

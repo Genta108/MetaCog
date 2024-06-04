@@ -52,7 +52,6 @@ class Reinforcement {
   int qmax(double data[], NN &mlp);
   int choice_qmax(double data[], NN &mlp);
   double update_qnet(int action, double dataset[], NN &mlp);  // updating q-value
-
   void display_input();
   void display_noisedstm();
 
@@ -63,7 +62,7 @@ class Reinforcement {
 
   // agent action score
   int cb_flg;
-  double cb_time;
+  double cb_repeat;
   double sum_ambiguity;
   double sum_delay;
 
@@ -122,10 +121,10 @@ void Reinforcement::qlearning(ContextBandit *cbandit, NN &mlp, SOM &som) {
   //^^^// Action selection phase //^^^//
 
   // v//state transition phase//v//
-  if ((selected_action == 0) && (cb_time < 10)) {  // choosing checking behavior
+  if ((selected_action == 0) && (cb_repeat < 10)) {  // choosing checking behavior
     if (CHKRL){cout << "--- for now CB ---" << endl; delay(DELAYTIME);}
 
-    cb_flg = 1; cb_time++; delay_count = 0; ambiguity = 0;
+    cb_flg = 1; cb_repeat++; delay_count = 0; ambiguity = 0;
     for (int i = 0; i < stmsize; ++i) memory_state[i] = cbandit->stimulus_image[cbandit->stimulus_num][i];
     if (CHKRL){display_input(); delay(DELAYTIME);}
     som.exposure(memory_state);
@@ -155,7 +154,7 @@ void Reinforcement::qlearning(ContextBandit *cbandit, NN &mlp, SOM &som) {
     //---------------- reward function -------------------//
     if(cbandit->judge(selected_action - 1) > 0){
       met = 1;
-      reinforcer = cbandit->judge(selected_action - 1) / (1 + CB_COST * cb_time);  //-checking behavior
+      reinforcer = cbandit->judge(selected_action - 1) / (1 + CB_COST * cb_repeat);  //-checking behavior
     }else if(cbandit->judge(selected_action - 1) < 0){
       punish = 1;
       reinforcer = cbandit->judge(selected_action - 1);
@@ -174,7 +173,7 @@ void Reinforcement::qlearning(ContextBandit *cbandit, NN &mlp, SOM &som) {
       if (CHKRL){cout << "Failed..." << endl; delay(DELAYTIME);}
     }
 
-  } else if (cb_time < 10) {
+  } else if (cb_repeat < 10) {
     cout << "**ACTION ERROR**" << endl;
     cout << "Selected action: " << selected_action << endl;
     return;
@@ -182,7 +181,7 @@ void Reinforcement::qlearning(ContextBandit *cbandit, NN &mlp, SOM &som) {
   //^//state transition phase//^//
 
   // v//update Q-network phase//v//
-  if (selected_action && (cb_time < 10)) {
+  if (selected_action && (cb_repeat < 10)) {
     if (CHKRL){cout << "--- for now action ---" << endl; delay(DELAYTIME);}
 
     mlp.output[selected_action] = mlp.forward(selected_action, dataset); //calc. currect dataset qv
@@ -335,7 +334,7 @@ void Reinforcement::init_state() {
 
   //agent score
   cb_flg = 0;
-  cb_time = 0;
+  cb_repeat = 0;
   reinforcer = 0;
   met = 0;
   punish = 0;

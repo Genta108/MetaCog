@@ -31,13 +31,13 @@ class Agent {
  public:
   //unordered_map<string, double> ln_results;
   double rewards, mets, finalmet;
-  double cbrate, cbtime, cbeffect, cbloss, ambiguity;
+  double cbrate, cbuse, cbtime, cbeffect, cbloss, ambiguity;
   double bare_agent, ic_agent, mtm_agent, icmtm_agent;
 
   //agents score of each action
   double ep_reward[ACTION_LIMIT];
   double ep_met[ACTION_LIMIT];
-  double ep_cbtime[ACTION_LIMIT];
+  double ep_cbuse[ACTION_LIMIT];
   double ep_cbloss[ACTION_LIMIT];
   double ep_cbeffect[ACTION_LIMIT];
   double ep_waiting[ACTION_LIMIT];
@@ -116,23 +116,25 @@ void Agent::lifetime(ContextBandit *cbandit) {
     if (ql.met) {
       ++mets;
       ++ep_met[act];
-      if (ql.cb_time) {
-        cbeffect += 1 / ql.cb_flg;
-        ep_cbeffect[act] += 1 / ql.cb_time;
+      if (ql.cb_flg) {
+        cbeffect += 1;
+        ep_cbeffect[act] += 1 / ql.cb_repeat;
       }
-    }
-    if (ql.cb_time) {
-      cbtime += ql.cb_time;
-      ep_cbtime[act] += ql.cb_time;
-      cbloss += ql.cb_time - 1;
-      ep_cbloss[act] += ql.cb_time - 1;
+    }else{
+      if (ql.cb_flg) {
+        cbuse += ql.cb_flg;
+        ep_cbuse[act] += ql.cb_flg;
+        cbloss += ql.cb_repeat - 1;
+        ep_cbloss[act] += ql.cb_repeat - 1;
+      }
     }
     //------------------------//
   }
   //======================== learning end ==========================//
 
   // average and final result
-  cbrate = cbtime / ACTION_LIMIT;
+  cbrate = cbuse / ACTION_LIMIT;
+  cbeffect = cbeffect / cbuse;
   cbloss /= ACTION_LIMIT;
   mets /= ACTION_LIMIT;
   finalmet = ql.met;
@@ -143,7 +145,7 @@ void Agent::init_episodes(){
   for(int a = 0; a < ACTION_LIMIT; ++a){
     ep_reward[a] = 0;
     ep_met[a] = 0;
-    ep_cbtime[a] = 0;
+    ep_cbuse[a] = 0;
     ep_cbloss[a] = 0;
     ep_cbeffect[a] = 0;
     ep_waiting[a] = 0;
@@ -159,7 +161,7 @@ void Agent::ep_generation_ave(){
   for(int a = 0; a < ACTION_LIMIT; a++){
     ep_reward[a] /= AGENTS;
     ep_met[a] /= AGENTS;
-    ep_cbtime[a] /= AGENTS;
+    ep_cbuse[a] /= AGENTS;
     ep_cbloss[a] /= AGENTS;
     ep_cbeffect[a] /= AGENTS;
     ep_waiting[a] /= AGENTS;
@@ -178,7 +180,7 @@ void Agent::display_results(int agent_id){
 	cout << "== Lifetime Results ==" << endl;
 	cout << "rewards: " << rewards << endl;
 	cout << "mets: " << mets << endl;
-	cout << "using CB: " << cbtime << endl;
+	cout << "using CB: " << cbuse << endl;
 	cout << "effect of CB: " << cbeffect << endl;
 	cout << endl;
 }

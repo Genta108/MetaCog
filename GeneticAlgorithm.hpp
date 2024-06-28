@@ -207,7 +207,7 @@ void GeneticAlgorithm::evaluation(Score *evo_score, ContextBandit *cbandit, stri
 
     fitness_functions(agent->rewards, agent->mets);
 
-    double results_container[TOTAL_EVO_RESULTS] = {fitness[agent_id], 0, agent->mets, agent->finalmet, agent->cbrate, agent->cbtime, agent->cbeffect, agent->cbloss, agent->ambiguity,
+    double results_container[TOTAL_EVO_RESULTS] = {fitness[agent_id], 0, agent->mets, agent->finalmet, agent->cbrate, agent->cbuse, agent->cbeffect, agent->cbloss, agent->ambiguity,
       agent->ic_agent, agent->mtm_agent, agent->icmtm_agent, agent->bare_agent,
       phenotype["stmsize"], phenotype["qleps"], phenotype["qlalpha"], phenotype["qlgamma"],
       phenotype["hiddencell"], phenotype["nnalpha"], phenotype["somsize"], phenotype["somalpha"], 0};

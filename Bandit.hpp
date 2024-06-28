@@ -49,10 +49,12 @@ void ContextBandit::init() {
   for (int s = 0; s < STIMULI; s++) {  // setting key stimuli
     int reward = abs(int_urand()) % CHOICES;
     stimuli_templete[reward][s] = REWARD;  // stim_indexに対してxを選んだときに報酬あり（各刺激に対して一つの正解）
-    if(PUNISH){
-      int punish = reward;
-      while((punish = abs(int_urand()) % CHOICES) == reward);
-      stimuli_templete[punish][s] = -PUNISH;
+  }
+  if(PUNISH){
+    for(int s = 0; s < STIMULI; s++){
+      for (int c = 0; c < CHOICES; c++) {
+        if(stimuli_templete[c][s] == 0) stimuli_templete[c][s] = -PUNISH;
+      }
     }
   }
 
@@ -113,14 +115,12 @@ int ContextBandit::judge(int action) {
 }
 
 void ContextBandit::printing(ofstream &task_print) {
-  task_print << "stimulus index, stimulus image, correct choice, bad choice" << endl;
+  task_print << "stimulus index, stimulus image, correct choice" << endl;
   for (int s = 0; s < STIMULI; s++) {
     task_print << s << ",";
     for (int i = 0; i < INFO_SIZE; ++i) task_print << stimulus_image[s][i];
     for (int c = 0; c < CHOICES; ++c) {
       if (stimuli_templete[c][s]){task_print << "," << c;}
-      if (stimuli_templete[c][s] < 0){task_print << "," << c;}
-      else if (PUNISH == 0){task_print << ", nan";}
     }
     task_print << endl;
   }
@@ -130,7 +130,6 @@ void ContextBandit::disptemplete() {
   cout << "+++stimuli template+++" << endl;
   cout << "stimulus index, stimulus image, correct choice, bad choice" << endl;
   for (int s = 0; s < STIMULI; s++) {
-
     cout << s << ",";
     for (int i = 0; i < INFO_SIZE; ++i) cout << stimulus_image[s][i];
     for (int c = 0; c < CHOICES; ++c) {

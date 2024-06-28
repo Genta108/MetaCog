@@ -31,7 +31,7 @@ class Agent {
  public:
   //unordered_map<string, double> ln_results;
   double rewards, mets, finalmet;
-  double cbrate, cbuse, cbtime, cbeffect, cbloss, ambiguity;
+  double cbrate, cbuse, cbeffect, cbloss, ambiguity;
   double bare_agent, ic_agent, mtm_agent, icmtm_agent;
 
   //agents score of each action
@@ -48,7 +48,7 @@ class Agent {
   Agent(unordered_map<string, double> ag_parameter){
     // reset score of one agent
     rewards = 0, mets = 0, finalmet = 0;
-    cbrate = 0, cbtime = 0, cbeffect = 0, cbloss = 0, ambiguity = 0;
+    cbrate = 0, cbuse = 0, cbeffect = 0, cbloss = 0, ambiguity = 0;
 
     // set the agent's parameter
     for (int i = 0; i < TOTAL_PHENOTYPE; ++i) phenotype[phenotype_name[i]] = ag_parameter[phenotype_name[i]];
@@ -70,7 +70,7 @@ class Agent {
 void Agent::init(ContextBandit *cbandit, unordered_map<string, double> ag_parameter){
     // reset score of one agent
     rewards = 0, mets = 0, finalmet = 0;
-    cbrate = 0, cbtime = 0, cbeffect = 0, cbloss = 0, ambiguity = 0;
+    cbrate = 0, cbuse = 0, cbeffect = 0, cbloss = 0, ambiguity = 0;
 
     // set the agent's parameter
     for (int i = 0; i < TOTAL_PHENOTYPE; ++i) phenotype[phenotype_name[i]] = ag_parameter[phenotype_name[i]];
@@ -117,8 +117,12 @@ void Agent::lifetime(ContextBandit *cbandit) {
       ++mets;
       ++ep_met[act];
       if (ql.cb_flg) {
+        cbuse += ql.cb_flg;
+        ep_cbuse[act] += ql.cb_flg;
         cbeffect += 1;
-        ep_cbeffect[act] += 1 / ql.cb_repeat;
+        ep_cbeffect[act] += 1;
+        cbloss += ql.cb_repeat - 1;
+        ep_cbloss[act] += ql.cb_repeat - 1;
       }
     }else{
       if (ql.cb_flg) {

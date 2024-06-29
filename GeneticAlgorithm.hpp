@@ -185,9 +185,17 @@ void GeneticAlgorithm::evaluation(Score *evo_score, ContextBandit *cbandit, stri
   Score *ln_score = new Score();
   ln_score->init(ln_results_name, TOTAL_LN_RESULTS);
 
+  Score *cb_score = new Score();
+  string cb_results_name[3] = {"cbuse", "cbeffect", "cbloss"};
+  cb_score->init(cb_results_name, 3);
+
   ostringstream ln_file_oss;
   ln_file_oss << lndir << "/generation" << generation+1 << "_ln.csv";  //name of gene file
   string lnpath = ln_file_oss.str();
+
+  ostringstream cb_file_oss;
+  cb_file_oss << lndir << "/generation" << generation+1 << "_cb.csv";  //name of gene file
+  string cbpath = cb_file_oss.str();
 
   Agent *agent = new Agent();  //learning census
   agent->init_episodes();
@@ -228,9 +236,19 @@ void GeneticAlgorithm::evaluation(Score *evo_score, ContextBandit *cbandit, stri
       ln_print << endl;
     }
     ln_print.close();
+
+    ofstream cb_print(cbpath.c_str());  //file io
+    cb_print << "noise," << "cbuse/noise," << "cbeffect/noise," << "cbloss/noise" << endl;
+    for (int n = 0; n < WAITING_TIME; ++n){
+      cb_print << n;
+      cb_print << "," << agent->noise_cbuse[n] << "," << agent->noise_cbeffect[n] << "," << agent->noise_cbloss[n];
+      cb_print << endl;
+    }
+    cb_print.close();
   }
 
   delete ln_score;
+  delete cb_score;
   delete agent;
 }
 

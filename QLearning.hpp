@@ -59,6 +59,7 @@ class Reinforcement {
   double reinforcer;
   int met;
   int punish;
+  int noise;
 
   // agent action score
   int cb_flg;
@@ -220,6 +221,7 @@ void Reinforcement::interval(SOM &som){
   for (int w = 0; w < delay_count; ++w) {
     for (int i = 0; i < stmsize; ++i) {
       if (real_urand() < NOISE_RATE) {
+        noise++;
         if (memory_state[i] == 0) {
           memory_state[i] = 1;
         } else if (memory_state[i] == 1) {
@@ -339,6 +341,7 @@ void Reinforcement::init_state() {
   met = 0;
   punish = 0;
   delay_count = 0;
+  noise = 0;
   ambiguity = 0;
   sum_ambiguity = 0;
   sum_delay = 0;

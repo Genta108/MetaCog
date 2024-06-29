@@ -43,6 +43,12 @@ class Agent {
   double ep_waiting[ACTION_LIMIT];
   double ep_ambiguity[ACTION_LIMIT];
 
+  //checking behavior score
+  double noise[WAITING_TIME];
+  double noise_cbuse[WAITING_TIME];
+  double noise_cbeffect[WAITING_TIME];
+  double noise_cbloss[WAITING_TIME];
+
   Agent(){}
 
   Agent(unordered_map<string, double> ag_parameter){
@@ -63,6 +69,7 @@ class Agent {
   void init(ContextBandit *cbandit, unordered_map<string, double> ag_parameter);
   void lifetime(ContextBandit *cbandit);
   void ep_generation_ave();
+  void cb_generation_ave();
   void display_results(int agent_id);
 };
 //=========================================================================================//
@@ -113,23 +120,29 @@ void Agent::lifetime(ContextBandit *cbandit) {
     ambiguity += ql.sum_ambiguity;
     ep_ambiguity[act] += ql.sum_ambiguity;
     ep_waiting[act] += ql.sum_delay;
+    noise[ql.noise]++;
     if (ql.met) {
       ++mets;
       ++ep_met[act];
       if (ql.cb_flg) {
         cbuse += ql.cb_flg;
         ep_cbuse[act] += ql.cb_flg;
+        noise_cbuse[ql.noise] += 1;
         cbeffect += 1;
         ep_cbeffect[act] += 1;
+        noise_cbeffect[ql.noise] += 1;
         cbloss += ql.cb_repeat - 1;
         ep_cbloss[act] += ql.cb_repeat - 1;
+        noise_cbloss[ql.noise] += ql.cb_repeat - 1;
       }
     }else{
       if (ql.cb_flg) {
         cbuse += ql.cb_flg;
         ep_cbuse[act] += ql.cb_flg;
+        noise_cbuse[ql.noise]++;
         cbloss += ql.cb_repeat - 1;
         ep_cbloss[act] += ql.cb_repeat - 1;
+        noise_cbloss[ql.noise] += ql.cb_repeat - 1;
       }
     }
     //------------------------//
@@ -155,6 +168,13 @@ void Agent::init_episodes(){
     ep_waiting[a] = 0;
     ep_ambiguity[a] = 0;
   }
+
+  for(int w = 0; w < WAITING_TIME; ++w){
+    noise[w] = 0;
+    noise_cbuse[w] = 0;
+    noise_cbeffect[w] = 0;
+    noise_cbloss[w] = 0;
+  }
 }
 
 
@@ -173,7 +193,14 @@ void Agent::ep_generation_ave(){
   }
 }
 
-
+//average episodes data
+void Agent::cb_generation_ave(){
+  for(int n = 0; n < WAITING_TIME; n++){
+    noise_cbuse[n] /= AGENTS*noise[n];
+    noise_cbeffect[n] /= AGENTS*noise[n];
+    noise_cbloss[n] /= AGENTS*noise[n];
+  }
+}
 
 void Agent::display_results(int agent_id){
 	cout << "== agent No. " << agent_id << " ==" << endl;

@@ -169,11 +169,11 @@ void Agent::init_episodes(){
     ep_ambiguity[a] = 0;
   }
 
-  for(int w = 0; w < NOISE_MAX; ++w){
-    noise[w] = 0;
-    noise_cbuse[w] = 0;
-    noise_cbeffect[w] = 0;
-    noise_cbloss[w] = 0;
+  for(int n = 0; n < NOISE_MAX; ++n){
+    noise[n] = 0;
+    noise_cbuse[n] = 0;
+    noise_cbeffect[n] = 0;
+    noise_cbloss[n] = 0;
   }
 }
 
@@ -196,9 +196,9 @@ void Agent::ep_generation_ave(){
 //average episodes data
 void Agent::cb_generation_ave(){
   for(int n = 0; n < NOISE_MAX; n++){
-    if(noise[n]){noise_cbuse[n] /= AGENTS*noise[n];}else{noise_cbuse[n] /= AGENTS;}
-    if(noise[n]){noise_cbeffect[n] /= AGENTS*noise[n];}else{noise_cbeffect[n] /= AGENTS;}
-    if(noise[n]){noise_cbloss[n] /= AGENTS*noise[n];}else{noise_cbloss[n] /= AGENTS;}
+    if(noise[n]){noise_cbuse[n] /= noise[n];}else{noise_cbuse[n] = 0;}
+    if(noise[n]){noise_cbeffect[n] /= noise[n];}else{noise_cbeffect[n] = 0;}
+    if(noise[n]){noise_cbloss[n] /= noise[n];}else{noise_cbloss[n] = 0;}
   }
 }
 

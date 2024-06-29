@@ -341,6 +341,7 @@ void Reinforcement::init_state() {
   met = 0;
   punish = 0;
   delay_count = 0;
+  noise = 0;
   ambiguity = 0;
   sum_ambiguity = 0;
   sum_delay = 0;

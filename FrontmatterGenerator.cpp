@@ -232,6 +232,7 @@ int main(int argc, char** argv){
   cout << "#define STM_INIT " << STM_INIT << endl;
   cout << "#define WAITING_TIME " << WAITING_TIME << endl;
   cout << "#define NOISE_RATE " << NOISE_RATE << endl;
+  cout << "#define NOISE_MAX " << (WAITING_TIME+1)*INFO_SIZE << endl;
   cout << "#define REWARD " << REWARD << endl;
   cout << "#define PUNISH " << PUNISH << endl;
   cout << endl;

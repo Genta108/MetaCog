@@ -181,14 +181,6 @@ void GeneticAlgorithm::expression(int gene[]){
 
 
 void GeneticAlgorithm::evaluation(Score *evo_score, ContextBandit *cbandit, string& lndir){
-  //learing score initialization
-  Score *ln_score = new Score();
-  ln_score->init(ln_results_name, TOTAL_LN_RESULTS);
-
-  Score *cb_score = new Score();
-  string cb_results_name[3] = {"cbuse", "cbeffect", "cbloss"};
-  cb_score->init(cb_results_name, 3);
-
   ostringstream ln_file_oss;
   ln_file_oss << lndir << "/generation" << generation+1 << "_ln.csv";  //name of gene file
   string lnpath = ln_file_oss.str();
@@ -202,7 +194,6 @@ void GeneticAlgorithm::evaluation(Score *evo_score, ContextBandit *cbandit, stri
 
   //======== agent loop start ========//
   for(agent_id = 0; agent_id < AGENTS; agent_id++){
-    ln_score->init_line();
     expression(gene[agent_id]);  //generate phenotype of agent
     agent->init(cbandit, phenotype);
 
@@ -239,7 +230,8 @@ void GeneticAlgorithm::evaluation(Score *evo_score, ContextBandit *cbandit, stri
 
     ofstream cb_print(cbpath.c_str());  //file io
     cb_print << "noise," << "cbuse/noise," << "cbeffect/noise," << "cbloss/noise" << endl;
-    for (int n = 0; n < WAITING_TIME; ++n){
+    agent->cb_generation_ave();
+    for (int n = 0; n < NOISE_MAX; ++n){
       cb_print << n;
       cb_print << "," << agent->noise_cbuse[n] << "," << agent->noise_cbeffect[n] << "," << agent->noise_cbloss[n];
       cb_print << endl;
@@ -247,8 +239,6 @@ void GeneticAlgorithm::evaluation(Score *evo_score, ContextBandit *cbandit, stri
     cb_print.close();
   }
 
-  delete ln_score;
-  delete cb_score;
   delete agent;
 }
 

@@ -44,10 +44,10 @@ class Agent {
   double ep_ambiguity[ACTION_LIMIT];
 
   //checking behavior score
-  double noise[WAITING_TIME];
-  double noise_cbuse[WAITING_TIME];
-  double noise_cbeffect[WAITING_TIME];
-  double noise_cbloss[WAITING_TIME];
+  double noise[NOISE_MAX];
+  double noise_cbuse[NOISE_MAX];
+  double noise_cbeffect[NOISE_MAX];
+  double noise_cbloss[NOISE_MAX];
 
   Agent(){}
 
@@ -169,7 +169,7 @@ void Agent::init_episodes(){
     ep_ambiguity[a] = 0;
   }
 
-  for(int w = 0; w < WAITING_TIME; ++w){
+  for(int w = 0; w < NOISE_MAX; ++w){
     noise[w] = 0;
     noise_cbuse[w] = 0;
     noise_cbeffect[w] = 0;
@@ -195,10 +195,10 @@ void Agent::ep_generation_ave(){
 
 //average episodes data
 void Agent::cb_generation_ave(){
-  for(int n = 0; n < WAITING_TIME; n++){
-    noise_cbuse[n] /= AGENTS*noise[n];
-    noise_cbeffect[n] /= AGENTS*noise[n];
-    noise_cbloss[n] /= AGENTS*noise[n];
+  for(int n = 0; n < NOISE_MAX; n++){
+    if(noise[n]){noise_cbuse[n] /= AGENTS*noise[n];}else{noise_cbuse[n] /= AGENTS;}
+    if(noise[n]){noise_cbeffect[n] /= AGENTS*noise[n];}else{noise_cbeffect[n] /= AGENTS;}
+    if(noise[n]){noise_cbloss[n] /= AGENTS*noise[n];}else{noise_cbloss[n] /= AGENTS;}
   }
 }
 

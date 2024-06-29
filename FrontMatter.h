@@ -19,6 +19,7 @@ using namespace std;
 #define INFO_SIZE 5
 #define WAITING_TIME 5
 #define NOISE_RATE 0.1
+#define NOISE_MAX 100
 #define REWARD 2
 #define PUNISH 1
 

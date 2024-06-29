@@ -217,7 +217,7 @@ void Reinforcement::set_parameter(unordered_map<string, double> hyper_parameter)
 void Reinforcement::interval(SOM &som){
   if(WTRANDOM){delay_count = abs(int_urand()) % WAITING_TIME + 1;}else{delay_count = WAITING_TIME;}
   sum_delay = delay_count;
-
+  noise = 0;
   for (int w = 0; w < delay_count; ++w) {
     for (int i = 0; i < stmsize; ++i) {
       if (real_urand() < NOISE_RATE) {
@@ -341,7 +341,6 @@ void Reinforcement::init_state() {
   met = 0;
   punish = 0;
   delay_count = 0;
-  noise = 0;
   ambiguity = 0;
   sum_ambiguity = 0;
   sum_delay = 0;

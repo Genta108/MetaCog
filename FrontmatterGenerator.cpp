@@ -146,6 +146,7 @@ int main(int argc, char** argv){
   fout_FM << "#define INFO_SIZE " << INFO_SIZE << endl;
   fout_FM << "#define WAITING_TIME " << WAITING_TIME << endl;
   fout_FM << "#define NOISE_RATE " << NOISE_RATE << endl;
+  fout_FM << "#define NOISE_MAX " << (WAITING_TIME+1)*INFO_SIZE << endl;
   fout_FM << "#define REWARD " << REWARD << endl;
   fout_FM << "#define PUNISH " << PUNISH << endl;
   fout_FM << endl;

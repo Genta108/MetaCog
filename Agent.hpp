@@ -48,6 +48,10 @@ class Agent {
   double noise_cbuse[NOISE_MAX];
   double noise_cbeffect[NOISE_MAX];
   double noise_cbloss[NOISE_MAX];
+  double delay[WAITING_TIME];
+  double delay_cbuse[WAITING_TIME];
+  double delay_cbeffect[WAITING_TIME];
+  double delay_cbloss[WAITING_TIME];
 
   Agent(){}
 
@@ -121,28 +125,34 @@ void Agent::lifetime(ContextBandit *cbandit) {
     ep_ambiguity[act] += ql.sum_ambiguity;
     ep_waiting[act] += ql.sum_delay;
     noise[ql.noise]++;
+    delay[ql.wait]++;
     if (ql.met) {
       ++mets;
       ++ep_met[act];
       if (ql.cb_flg) {
         cbuse += ql.cb_flg;
         ep_cbuse[act] += ql.cb_flg;
+        delay_cbuse[ql.wait] += 1;
         noise_cbuse[ql.noise] += 1;
         cbeffect += 1;
         ep_cbeffect[act] += 1;
         noise_cbeffect[ql.noise] += 1;
+        delay_cbeffect[ql.wait] += 1;
         cbloss += ql.cb_repeat - 1;
         ep_cbloss[act] += ql.cb_repeat - 1;
         noise_cbloss[ql.noise] += ql.cb_repeat - 1;
+        delay_cbloss[ql.wait] += ql.cb_repeat - 1;
       }
     }else{
       if (ql.cb_flg) {
         cbuse += ql.cb_flg;
         ep_cbuse[act] += ql.cb_flg;
         noise_cbuse[ql.noise]++;
+        delay_cbuse[ql.wait]++;
         cbloss += ql.cb_repeat - 1;
         ep_cbloss[act] += ql.cb_repeat - 1;
         noise_cbloss[ql.noise] += ql.cb_repeat - 1;
+        delay_cbloss[ql.wait] += ql.cb_repeat - 1;
       }
     }
     //------------------------//
@@ -153,6 +163,8 @@ void Agent::lifetime(ContextBandit *cbandit) {
   cbrate = cbuse / ACTION_LIMIT;
   cbeffect = cbeffect / cbuse;
   cbloss /= ACTION_LIMIT;
+  cbrate = cbuse / ACTION_LIMIT;
+
   mets /= ACTION_LIMIT;
   finalmet = ql.met;
   ambiguity /= ACTION_LIMIT;
@@ -174,6 +186,13 @@ void Agent::init_episodes(){
     noise_cbuse[n] = 0;
     noise_cbeffect[n] = 0;
     noise_cbloss[n] = 0;
+  }
+
+  for(int w = 0; w < WAITING_TIME; ++w){
+    delay[w] = 0;
+    delay_cbuse[w] = 0;
+    delay_cbeffect[w] = 0;
+    delay_cbloss[w] = 0;
   }
 }
 
@@ -197,8 +216,13 @@ void Agent::ep_generation_ave(){
 void Agent::cb_generation_ave(){
   for(int n = 0; n < NOISE_MAX; n++){
     if(noise[n]){noise_cbuse[n] /= noise[n];}else{noise_cbuse[n] = 0;}
-    if(noise[n]){noise_cbeffect[n] /= noise[n];}else{noise_cbeffect[n] = 0;}
+    if(noise[n]){noise_cbeffect[n] /= noise[n]*noise_cbuse[n];}else{noise_cbeffect[n] = 0;}
     if(noise[n]){noise_cbloss[n] /= noise[n];}else{noise_cbloss[n] = 0;}
+  }
+  for(int w = 0; w < WAITING_TIME; w++){
+    if(delay[w]){delay_cbuse[w] /= delay[w];}else{delay_cbuse[w] = 0;}
+    if(delay[w]){delay_cbeffect[w] /= delay[w]*delay_cbuse[w];}else{delay_cbeffect[w] = 0;}
+    if(delay[w]){delay_cbloss[w] /= delay[w];}else{delay_cbloss[w] = 0;}
   }
 }
 

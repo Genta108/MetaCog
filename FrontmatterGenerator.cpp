@@ -211,7 +211,7 @@ int main(int argc, char** argv){
 
   fout_FM << "string directory_name = \"" << "ev" << EVALUATION << "_ag" << AGENTS << "_gn" << GENERATION << "_mt" << MT_RATE;
   fout_FM << "_inf" << INFO_SIZE << "_act" << ACTION_LIMIT << "_sm" << SOFTMAX << "_st" << STIMULI << "_ch" << CHOICES;
-  fout_FM << "_wt" << WAITING_TIME << "_nr" << NOISE_RATE << "_stmi" << STM_INIT << "_rw" << REWARD << "_pn" << PUNISH << "_cbc" << CB_COST << "_exp" << EXPOSURE;
+  fout_FM << "_wt" << WAITING_TIME << "_wtr" << WTRANDOM << "_nr" << NOISE_RATE << "_stmi" << STM_INIT << "_rw" << REWARD << "_pn" << PUNISH << "_cbc" << CB_COST << "_exp" << EXPOSURE;
   fout_FM << "_icc" << IC_COST << "_mtmc" << MTM_COST << "_stmc" << STM_COST << "\";";  //basic file name;
 
   fout_FM.close();

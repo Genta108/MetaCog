@@ -206,7 +206,8 @@ void GeneticAlgorithm::evaluation(Score *evo_score, ContextBandit *cbandit, stri
 
     fitness_functions(agent->rewards, agent->mets);
 
-    double results_container[TOTAL_EVO_RESULTS] = {fitness[agent_id], 0, agent->mets, agent->finalmet, agent->cbrate, agent->cbuse, agent->cbeffect, agent->cbloss, agent->ambiguity,
+    double results_container[TOTAL_EVO_RESULTS] = {fitness[agent_id], 0, agent->mets, agent->finalmet, agent->cbrate, 
+      agent->cbuse, agent->cbeffect, agent->cbloss, agent->ambiguity,
       agent->ic_agent, agent->mtm_agent, agent->icmtm_agent, agent->bare_agent,
       phenotype["stmsize"], phenotype["qleps"], phenotype["qlalpha"], phenotype["qlgamma"],
       phenotype["hiddencell"], phenotype["nnalpha"], phenotype["somsize"], phenotype["somalpha"], 0};
@@ -234,6 +235,12 @@ void GeneticAlgorithm::evaluation(Score *evo_score, ContextBandit *cbandit, stri
     for (int n = 0; n < NOISE_MAX; ++n){
       cb_print << n;
       cb_print << "," << agent->noise_cbuse[n] << "," << agent->noise_cbeffect[n] << "," << agent->noise_cbloss[n];
+      cb_print << endl;
+    }
+    cb_print << "delay," << "cbuse/delay," << "cbeffect/delay," << "cbloss/delay" << endl;
+    for (int w = 0; w < WAITING_TIME; ++w){
+      cb_print << w;
+      cb_print << "," << agent->delay_cbuse[w] << "," << agent->delay_cbeffect[w] << "," << agent->delay_cbloss[w];
       cb_print << endl;
     }
     cb_print.close();

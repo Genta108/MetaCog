@@ -92,7 +92,11 @@ void NN::init_nn(int i, int h, int o, double a){
 void NN::initwh(){
   for(int i = 0; i < hiddencell; ++i){
     for(int j = 0; j < inputcell+1; ++j){
-      wh[i][j] = 0.1*drand();
+      if(j == INFO_SIZE){
+        wh[i][j] = 0.05*drand();
+      }else{
+        wh[i][j] = 0.1*drand();
+      }
     }
   }
 }
@@ -100,7 +104,11 @@ void NN::initwh(){
 void NN::initwo(){
   for(int o = 0; o < outputcell; ++o){
     for(int i = 0; i < hiddencell+1; ++i){
-      wo[o][i] = 0.1*drand();
+      if(o == 0){
+        wo[o][i] = 0.05*drand();
+      }else{
+        wo[o][i] = 0.1*drand();
+      }
     }
   }
 }

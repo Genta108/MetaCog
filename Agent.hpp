@@ -215,13 +215,13 @@ void Agent::ep_generation_ave(){
 //average episodes data
 void Agent::cb_generation_ave(){
   for(int n = 0; n < NOISE_MAX; n++){
+    if(noise[n]){noise_cbeffect[n] /= noise_cbuse[n];}else{noise_cbeffect[n] = 0;}
     if(noise[n]){noise_cbuse[n] /= noise[n];}else{noise_cbuse[n] = 0;}
-    if(noise[n]){noise_cbeffect[n] /= noise[n]*noise_cbuse[n];}else{noise_cbeffect[n] = 0;}
     if(noise[n]){noise_cbloss[n] /= noise[n];}else{noise_cbloss[n] = 0;}
   }
   for(int w = 0; w < WAITING_TIME; w++){
+    if(delay[w]){delay_cbeffect[w] /= delay_cbuse[w];}else{delay_cbeffect[w] = 0;}
     if(delay[w]){delay_cbuse[w] /= delay[w];}else{delay_cbuse[w] = 0;}
-    if(delay[w]){delay_cbeffect[w] /= delay[w]*delay_cbuse[w];}else{delay_cbeffect[w] = 0;}
     if(delay[w]){delay_cbloss[w] /= delay[w];}else{delay_cbloss[w] = 0;}
   }
 }

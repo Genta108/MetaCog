@@ -19,7 +19,7 @@ using std::string;
 //===================================== class declaration =====================================//
 class ContextBandit {
  private:
-  int stimuli_templete[CHOICES][STIMULI];
+  double stimuli_templete[CHOICES][STIMULI];
 
   void makestimuli();  // generate stimuli image
   int imgcmp(const int*, const int*, const int);

@@ -38,6 +38,7 @@ class Reinforcement {
   // agent's state & context
   int selected_action;
   double memory_state[INFO_SIZE];    // short-term memory
+  double stimulus_state[INFO_SIZE];    // input
   double ambiguity, delay_count;
   int greedy_flg;
 
@@ -60,6 +61,7 @@ class Reinforcement {
   int met;
   int punish;
   int noise;
+  int rstnoise;
   int wait;
 
   // agent action score
@@ -80,7 +82,10 @@ void Reinforcement::qlearning(ContextBandit *cbandit, NN &mlp, SOM &som) {
 
   // vvv// Input&Waiting phase //vvv//
   cbandit->stimulus();  // input sample stimulus
-  for (int i = 0; i < stmsize; ++i) memory_state[i] = cbandit->stimulus_image[cbandit->stimulus_num][i];
+  for (int i = 0; i < stmsize; ++i){
+    stimulus_state[i] = cbandit->stimulus_image[cbandit->stimulus_num][i];
+    memory_state[i] = cbandit->stimulus_image[cbandit->stimulus_num][i];
+  }
   if (CHKRL){display_input(); delay(DELAYTIME);}
   som.exposure(memory_state);
 
@@ -127,7 +132,7 @@ void Reinforcement::qlearning(ContextBandit *cbandit, NN &mlp, SOM &som) {
     if (CHKRL){cout << "--- for now CB ---" << endl; delay(DELAYTIME);}
 
     cb_flg = 1; cb_repeat++; delay_count = 0; ambiguity = 0;
-    for (int i = 0; i < stmsize; ++i) memory_state[i] = cbandit->stimulus_image[cbandit->stimulus_num][i];
+    for (int i = 0; i < stmsize; ++i) memory_state[i] = stimulus_state[i];
     if (CHKRL){display_input(); delay(DELAYTIME);}
     som.exposure(memory_state);
     for(int i = 0; i < stmsize; ++i) memory_state[i] = som.somout[i];
@@ -222,7 +227,7 @@ void Reinforcement::interval(SOM &som){
   for (int w = 0; w < delay_count; ++w) {
     for (int i = 0; i < stmsize; ++i) {
       if (real_urand() < NOISE_RATE) {
-        noise++;
+        ++noise;
         if (memory_state[i] == 0) {
           memory_state[i] = 1;
         } else if (memory_state[i] == 1) {
@@ -233,6 +238,7 @@ void Reinforcement::interval(SOM &som){
     ambiguity += som.maintain(memory_state);
     for (int i = 0; i < stmsize; ++i) {
       memory_state[i] = som.somout[i];
+      if(memory_state[i] != stimulus_state[i]) ++rstnoise;
     }
   }
   sum_ambiguity = ambiguity;
@@ -333,7 +339,11 @@ double Reinforcement::update_qnet(int action, double data[], NN &mlp) {
 void Reinforcement::init_state() {
   //agent state
   for (int i = 0; i < INPUTCELL + OUTPUTCELL; ++i) dataset[i] = 0;  // initialize
-  for (int i = 0; i < INFO_SIZE; ++i)  memory_state[i] = 0;
+  for (int i = 0; i < INFO_SIZE; ++i){
+    memory_state[i] = 0;
+    stimulus_state[i] = 0;
+  }
+
 
   //agent score
   cb_flg = 0;
@@ -343,6 +353,7 @@ void Reinforcement::init_state() {
   punish = 0;
   delay_count = 0;
   noise = 0;
+  rstnoise = 0;
   wait = 0;
   ambiguity = 0;
   sum_ambiguity = 0;

@@ -45,10 +45,17 @@ class Agent {
 
   //checking behavior score
   double noise[NOISE_MAX];
+  double noise_met[NOISE_MAX];
   double noise_cbuse[NOISE_MAX];
   double noise_cbeffect[NOISE_MAX];
   double noise_cbloss[NOISE_MAX];
+  double rstnoise[NOISE_MAX];
+  double rstnoise_met[NOISE_MAX];
+  double rstnoise_cbuse[NOISE_MAX];
+  double rstnoise_cbeffect[NOISE_MAX];
+  double rstnoise_cbloss[NOISE_MAX];
   double delay[WAITING_TIME];
+  double delay_met[WAITING_TIME];
   double delay_cbuse[WAITING_TIME];
   double delay_cbeffect[WAITING_TIME];
   double delay_cbloss[WAITING_TIME];
@@ -125,22 +132,29 @@ void Agent::lifetime(ContextBandit *cbandit) {
     ep_ambiguity[act] += ql.sum_ambiguity;
     ep_waiting[act] += ql.sum_delay;
     noise[ql.noise]++;
+    rstnoise[ql.rstnoise]++;
     delay[ql.wait]++;
     if (ql.met) {
       ++mets;
       ++ep_met[act];
+      ++noise_met[ql.noise];
+      ++rstnoise_met[ql.rstnoise];
+      ++delay_met[ql.wait];
       if (ql.cb_flg) {
         cbuse += ql.cb_flg;
         ep_cbuse[act] += ql.cb_flg;
         delay_cbuse[ql.wait] += 1;
         noise_cbuse[ql.noise] += 1;
+        rstnoise_cbuse[ql.rstnoise] += 1;
         cbeffect += 1;
         ep_cbeffect[act] += 1;
         noise_cbeffect[ql.noise] += 1;
+        rstnoise_cbeffect[ql.rstnoise] += 1;
         delay_cbeffect[ql.wait] += 1;
         cbloss += ql.cb_repeat - 1;
         ep_cbloss[act] += ql.cb_repeat - 1;
         noise_cbloss[ql.noise] += ql.cb_repeat - 1;
+        rstnoise_cbloss[ql.rstnoise] += ql.cb_repeat - 1;
         delay_cbloss[ql.wait] += ql.cb_repeat - 1;
       }
     }else{
@@ -148,10 +162,12 @@ void Agent::lifetime(ContextBandit *cbandit) {
         cbuse += ql.cb_flg;
         ep_cbuse[act] += ql.cb_flg;
         noise_cbuse[ql.noise]++;
+        rstnoise_cbuse[ql.rstnoise]++;
         delay_cbuse[ql.wait]++;
         cbloss += ql.cb_repeat - 1;
         ep_cbloss[act] += ql.cb_repeat - 1;
         noise_cbloss[ql.noise] += ql.cb_repeat - 1;
+        rstnoise_cbloss[ql.rstnoise] += ql.cb_repeat - 1;
         delay_cbloss[ql.wait] += ql.cb_repeat - 1;
       }
     }
@@ -183,21 +199,26 @@ void Agent::init_episodes(){
 
   for(int n = 0; n < NOISE_MAX; ++n){
     noise[n] = 0;
+    noise_met[n] = 0; 
     noise_cbuse[n] = 0;
     noise_cbeffect[n] = 0;
     noise_cbloss[n] = 0;
+
+    rstnoise[n] = 0;
+    rstnoise_met[n] = 0; 
+    rstnoise_cbuse[n] = 0;
+    rstnoise_cbeffect[n] = 0;
+    rstnoise_cbloss[n] = 0;
   }
 
   for(int w = 0; w < WAITING_TIME; ++w){
     delay[w] = 0;
+    delay_met[w] = 0;
     delay_cbuse[w] = 0;
     delay_cbeffect[w] = 0;
     delay_cbloss[w] = 0;
   }
 }
-
-
-
 
 //average episodes data
 void Agent::ep_generation_ave(){
@@ -216,11 +237,19 @@ void Agent::ep_generation_ave(){
 void Agent::cb_generation_ave(){
   for(int n = 0; n < NOISE_MAX; n++){
     if(noise_cbuse[n]){noise_cbeffect[n] /= noise_cbuse[n];}else{noise_cbeffect[n] = 0;}
+    if(noise[n]){noise_met[n] /= noise[n];}else{noise_met[n] = 0;}
     if(noise[n]){noise_cbuse[n] /= noise[n];}else{noise_cbuse[n] = 0;}
     if(noise[n]){noise_cbloss[n] /= noise[n];}else{noise_cbloss[n] = 0;}
+
+    if(rstnoise_cbuse[n]){rstnoise_cbeffect[n] /= rstnoise_cbuse[n];}else{rstnoise_cbeffect[n] = 0;}
+    if(rstnoise[n]){rstnoise_met[n] /= noise[n];}else{rstnoise_met[n] = 0;}
+    if(rstnoise[n]){rstnoise_cbuse[n] /= rstnoise[n];}else{rstnoise_cbuse[n] = 0;}
+    if(rstnoise[n]){rstnoise_cbloss[n] /= rstnoise[n];}else{rstnoise_cbloss[n] = 0;}
   }
+
   for(int w = 0; w < WAITING_TIME; w++){
     if(delay_cbuse[w]){delay_cbeffect[w] /= delay_cbuse[w];}else{delay_cbeffect[w] = 0;}
+    if(delay[w]){delay_met[w] /= delay[w];}else{delay_met[w] = 0;}
     if(delay[w]){delay_cbuse[w] /= delay[w];}else{delay_cbuse[w] = 0;}
     if(delay[w]){delay_cbloss[w] /= delay[w];}else{delay_cbloss[w] = 0;}
   }

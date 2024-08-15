@@ -185,9 +185,17 @@ void GeneticAlgorithm::evaluation(Score *evo_score, ContextBandit *cbandit, stri
   ln_file_oss << lndir << "/generation" << generation+1 << "_ln.csv";  //name of gene file
   string lnpath = ln_file_oss.str();
 
-  ostringstream cb_file_oss;
-  cb_file_oss << lndir << "/generation" << generation+1 << "_cb.csv";  //name of gene file
-  string cbpath = cb_file_oss.str();
+  ostringstream ncb_file_oss;
+  ncb_file_oss << lndir << "/generation" << generation+1 << "_ncb.csv";  //name of noise cb file
+  string ncbpath = ncb_file_oss.str();
+
+  ostringstream dcb_file_oss;
+  dcb_file_oss << lndir << "/generation" << generation+1 << "_dcb.csv";  //name of delay cb file
+  string dcbpath = dcb_file_oss.str();
+
+  ostringstream rncb_file_oss;
+  rncb_file_oss << lndir << "/generation" << generation+1 << "_rncb.csv";  //name of rstnoise cb file
+  string rncbpath = rncb_file_oss.str();
 
   Agent *agent = new Agent();  //learning census
   agent->init_episodes();
@@ -217,10 +225,12 @@ void GeneticAlgorithm::evaluation(Score *evo_score, ContextBandit *cbandit, stri
   //========= agent loop end =========//
 
   if(((generation+1) % GEN_SKIP) == 0){
+    
+    agent->ep_generation_ave();
+    
     ofstream ln_print(lnpath.c_str());  //file io
     ln_print << "episode," << "reward," << "met," << "cbuse," << "cbloss," << "cbeffect,";
     ln_print << "delay," << "ambiguity" << endl;
-    agent->ep_generation_ave();
     for (int t = 0; t < ACTION_LIMIT; ++t){
       ln_print << t + 1;
       ln_print << "," << agent->ep_reward[t] << "," << agent->ep_met[t] << "," << agent->ep_cbuse[t];
@@ -229,21 +239,35 @@ void GeneticAlgorithm::evaluation(Score *evo_score, ContextBandit *cbandit, stri
     }
     ln_print.close();
 
-    ofstream cb_print(cbpath.c_str());  //file io
-    cb_print << "noise," << "cbuse/noise," << "cbeffect/noise," << "cbloss/noise" << endl;
     agent->cb_generation_ave();
+    
+    ofstream ncb_print(ncbpath.c_str());  //file io
+    ncb_print << "noise," << "met/noise," << "cbuse/noise," << "cbeffect/noise," << "cbloss/noise" << endl;
     for (int n = 0; n < NOISE_MAX; ++n){
-      cb_print << n;
-      cb_print << "," << agent->noise_cbuse[n] << "," << agent->noise_cbeffect[n] << "," << agent->noise_cbloss[n];
-      cb_print << endl;
+      ncb_print << n;
+      ncb_print << "," << agent->noise_met[n] << "," << agent->noise_cbuse[n] << "," << agent->noise_cbeffect[n] << "," << agent->noise_cbloss[n];
+      ncb_print << endl;
     }
-    cb_print << "delay," << "cbuse/delay," << "cbeffect/delay," << "cbloss/delay" << endl;
+    ncb_print.close();
+
+    ofstream dcb_print(dcbpath.c_str());  //file io
+    dcb_print << "delay," << "met/delay," << "cbuse/delay," << "cbeffect/delay," << "cbloss/delay" << endl;
     for (int w = 0; w < WAITING_TIME; ++w){
-      cb_print << w;
-      cb_print << "," << agent->delay_cbuse[w] << "," << agent->delay_cbeffect[w] << "," << agent->delay_cbloss[w];
-      cb_print << endl;
+      dcb_print << w;
+      dcb_print << "," << agent->delay_met[w] << "," << agent->delay_cbuse[w] << "," << agent->delay_cbeffect[w] << "," << agent->delay_cbloss[w];
+      dcb_print << endl;
     }
-    cb_print.close();
+    dcb_print.close();
+
+    ofstream rncb_print(rncbpath.c_str());  //file io
+    rncb_print << "rstnoise," << "met/rstnoise," << "cbuse/rstnoise," << "cbeffect/rstnoise," << "cbloss/rstnoise" << endl;
+    for (int n = 0; n < NOISE_MAX; ++n){
+      rncb_print << n;
+      rncb_print << "," << agent->rstnoise_met[n] << "," << agent->rstnoise_cbuse[n] << "," << agent->rstnoise_cbeffect[n] << "," << agent->rstnoise_cbloss[n];
+      rncb_print << endl;
+    }
+    rncb_print.close();
+
   }
 
   delete agent;

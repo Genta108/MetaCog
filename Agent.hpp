@@ -242,7 +242,7 @@ void Agent::cb_generation_ave(){
     if(noise[n]){noise_cbloss[n] /= noise[n];}else{noise_cbloss[n] = 0;}
 
     if(rstnoise_cbuse[n]){rstnoise_cbeffect[n] /= rstnoise_cbuse[n];}else{rstnoise_cbeffect[n] = 0;}
-    if(rstnoise[n]){rstnoise_met[n] /= noise[n];}else{rstnoise_met[n] = 0;}
+    if(rstnoise[n]){rstnoise_met[n] /= rstnoise[n];}else{rstnoise_met[n] = 0;}
     if(rstnoise[n]){rstnoise_cbuse[n] /= rstnoise[n];}else{rstnoise_cbuse[n] = 0;}
     if(rstnoise[n]){rstnoise_cbloss[n] /= rstnoise[n];}else{rstnoise_cbloss[n] = 0;}
   }

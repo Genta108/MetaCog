@@ -238,7 +238,7 @@ void GeneticAlgorithm::evaluation(Score *evo_score, ContextBandit *cbandit, stri
     agent->cb_generation_ave();
     
     ofstream ncb_print(ncbpath.c_str());  //file io
-    ncb_print << "noise," << "met/noise," << "cbuse/noise," << "cbeffect/noise," << "cbloss/noise" << endl;
+    ncb_print << "noise," << "noise_freq," << "met/noise," << "cbuse/noise," << "cbeffect/noise," << "cbloss/noise," << "delay/noise" << endl;
     for (int n = 0; n < NOISE_MAX; ++n){
       ncb_print << n;
       ncb_print << "," << agent->noise[n] << "," << agent->noise_met[n] << "," << agent->noise_cbuse[n] << "," << agent->noise_cbeffect[n] << "," << agent->noise_cbloss[n] << "," << agent->noise_delay[n];
@@ -247,7 +247,7 @@ void GeneticAlgorithm::evaluation(Score *evo_score, ContextBandit *cbandit, stri
     ncb_print.close();
 
     ofstream dcb_print(dcbpath.c_str());  //file io
-    dcb_print << "delay," << "met/delay," << "cbuse/delay," << "cbeffect/delay," << "cbloss/delay" << endl;
+    dcb_print << "delay," << "delay_freq," << "met/delay," << "cbuse/delay," << "cbeffect/delay," << "cbloss/delay," << "noise/delay" << endl;
     for (int w = 0; w < WAITING_TIME+1; ++w){
       dcb_print << w;
       dcb_print << "," << agent->delay[w] << "," << agent->delay_met[w] << "," << agent->delay_cbuse[w] << "," << agent->delay_cbeffect[w] << "," << agent->delay_cbloss[w] << "," << agent->delay_noise[w];

@@ -26,7 +26,6 @@ class Agent {
   unordered_map<string, double> phenotype;
   Reinforcement ql;
   NN mlp;
-  SOM som;
 
  public:
   //unordered_map<string, double> ln_results;
@@ -49,16 +48,14 @@ class Agent {
   double noise_cbuse[NOISE_MAX];
   double noise_cbeffect[NOISE_MAX];
   double noise_cbloss[NOISE_MAX];
-  double rstnoise[NOISE_MAX];
-  double rstnoise_met[NOISE_MAX];
-  double rstnoise_cbuse[NOISE_MAX];
-  double rstnoise_cbeffect[NOISE_MAX];
-  double rstnoise_cbloss[NOISE_MAX];
-  double delay[WAITING_TIME];
-  double delay_met[WAITING_TIME];
-  double delay_cbuse[WAITING_TIME];
-  double delay_cbeffect[WAITING_TIME];
-  double delay_cbloss[WAITING_TIME];
+  double noise_delay[NOISE_MAX];
+
+  double delay[WAITING_TIME+1];
+  double delay_noise[WAITING_TIME+1];
+  double delay_met[WAITING_TIME+1];
+  double delay_cbuse[WAITING_TIME+1];
+  double delay_cbeffect[WAITING_TIME+1];
+  double delay_cbloss[WAITING_TIME+1];
 
   Agent(){}
 
@@ -100,20 +97,11 @@ void Agent::init(ContextBandit *cbandit, unordered_map<string, double> ag_parame
 
     ql.set_parameter(ag_parameter);
     mlp.init_nn(INPUTCELL, ag_parameter["hiddencell"], OUTPUTCELL, ag_parameter["nnalpha"]);
-    som.init_som(ag_parameter["stmsize"], ag_parameter["somsize"], ag_parameter["somalpha"]);
     if(CHKAG){
       for(int i = 0; i < TOTAL_PHENOTYPE; ++i){
         cout << phenotype_name[i] << ": " << ag_parameter[phenotype_name[i]] << endl;
       }
       cout << endl;
-    }
-
-    // som exposure for preparing
-    for(int prexp = 0; prexp < EXPOSURE; ++prexp){
-      cbandit->stimulus(); //input sample stimulus to stm
-      double exp_state[(int)ag_parameter["stmsize"]];
-      for(int i = 0; i < ag_parameter["stmsize"]; ++i) exp_state[i] = cbandit->stimulus_image[cbandit->stimulus_num][i];
-      som.exposure(exp_state);
     }
 }
 
@@ -121,7 +109,7 @@ void Agent::lifetime(ContextBandit *cbandit) {
   //====================== learning start ========================//
   for (int act = 0; act < ACTION_LIMIT; act++) {
     if (CHKAG) cout << "------  action start  ------" << endl;
-    ql.qlearning(cbandit, mlp, som);
+    ql.qlearning(cbandit, mlp);
     if (CHKAG){cout << "------   action finish   ------" << endl << endl;}
 
     //----- action results -----//
@@ -132,29 +120,26 @@ void Agent::lifetime(ContextBandit *cbandit) {
     ep_ambiguity[act] += ql.sum_ambiguity;
     ep_waiting[act] += ql.sum_delay;
     noise[ql.noise]++;
-    rstnoise[ql.rstnoise]++;
+    noise_delay[ql.noise] += ql.wait;
     delay[ql.wait]++;
+    delay_noise[ql.wait] += ql.noise;
     if (ql.met) {
       ++mets;
       ++ep_met[act];
       ++noise_met[ql.noise];
-      ++rstnoise_met[ql.rstnoise];
       ++delay_met[ql.wait];
       if (ql.cb_flg) {
         cbuse += ql.cb_flg;
         ep_cbuse[act] += ql.cb_flg;
         delay_cbuse[ql.wait] += 1;
         noise_cbuse[ql.noise] += 1;
-        rstnoise_cbuse[ql.rstnoise] += 1;
         cbeffect += 1;
         ep_cbeffect[act] += 1;
         noise_cbeffect[ql.noise] += 1;
-        rstnoise_cbeffect[ql.rstnoise] += 1;
         delay_cbeffect[ql.wait] += 1;
         cbloss += ql.cb_repeat - 1;
         ep_cbloss[act] += ql.cb_repeat - 1;
         noise_cbloss[ql.noise] += ql.cb_repeat - 1;
-        rstnoise_cbloss[ql.rstnoise] += ql.cb_repeat - 1;
         delay_cbloss[ql.wait] += ql.cb_repeat - 1;
       }
     }else{
@@ -162,12 +147,10 @@ void Agent::lifetime(ContextBandit *cbandit) {
         cbuse += ql.cb_flg;
         ep_cbuse[act] += ql.cb_flg;
         noise_cbuse[ql.noise]++;
-        rstnoise_cbuse[ql.rstnoise]++;
         delay_cbuse[ql.wait]++;
         cbloss += ql.cb_repeat - 1;
         ep_cbloss[act] += ql.cb_repeat - 1;
         noise_cbloss[ql.noise] += ql.cb_repeat - 1;
-        rstnoise_cbloss[ql.rstnoise] += ql.cb_repeat - 1;
         delay_cbloss[ql.wait] += ql.cb_repeat - 1;
       }
     }
@@ -199,20 +182,16 @@ void Agent::init_episodes(){
 
   for(int n = 0; n < NOISE_MAX; ++n){
     noise[n] = 0;
+    noise_delay[n] = 0;
     noise_met[n] = 0; 
     noise_cbuse[n] = 0;
     noise_cbeffect[n] = 0;
     noise_cbloss[n] = 0;
-
-    rstnoise[n] = 0;
-    rstnoise_met[n] = 0; 
-    rstnoise_cbuse[n] = 0;
-    rstnoise_cbeffect[n] = 0;
-    rstnoise_cbloss[n] = 0;
   }
 
-  for(int w = 0; w < WAITING_TIME; ++w){
+  for(int w = 0; w < WAITING_TIME+1; ++w){
     delay[w] = 0;
+    delay_noise[w] = 0;
     delay_met[w] = 0;
     delay_cbuse[w] = 0;
     delay_cbeffect[w] = 0;
@@ -240,15 +219,12 @@ void Agent::cb_generation_ave(){
     if(noise[n]){noise_met[n] /= noise[n];}else{noise_met[n] = 0;}
     if(noise[n]){noise_cbuse[n] /= noise[n];}else{noise_cbuse[n] = 0;}
     if(noise[n]){noise_cbloss[n] /= noise[n];}else{noise_cbloss[n] = 0;}
-
-    if(rstnoise_cbuse[n]){rstnoise_cbeffect[n] /= rstnoise_cbuse[n];}else{rstnoise_cbeffect[n] = 0;}
-    if(rstnoise[n]){rstnoise_met[n] /= rstnoise[n];}else{rstnoise_met[n] = 0;}
-    if(rstnoise[n]){rstnoise_cbuse[n] /= rstnoise[n];}else{rstnoise_cbuse[n] = 0;}
-    if(rstnoise[n]){rstnoise_cbloss[n] /= rstnoise[n];}else{rstnoise_cbloss[n] = 0;}
+    if(noise[n]){noise_delay[n] /= noise[n];}else{noise_delay[n] = 0;}
   }
 
-  for(int w = 0; w < WAITING_TIME; w++){
+  for(int w = 0; w < WAITING_TIME+1; w++){
     if(delay_cbuse[w]){delay_cbeffect[w] /= delay_cbuse[w];}else{delay_cbeffect[w] = 0;}
+    if(delay[w]){delay_noise[w] /= delay[w];}else{delay_noise[w] = 0;}
     if(delay[w]){delay_met[w] /= delay[w];}else{delay_met[w] = 0;}
     if(delay[w]){delay_cbuse[w] /= delay[w];}else{delay_cbuse[w] = 0;}
     if(delay[w]){delay_cbloss[w] /= delay[w];}else{delay_cbloss[w] = 0;}

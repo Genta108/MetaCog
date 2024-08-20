@@ -193,10 +193,6 @@ void GeneticAlgorithm::evaluation(Score *evo_score, ContextBandit *cbandit, stri
   dcb_file_oss << lndir << "/generation" << generation+1 << "_dcb.csv";  //name of delay cb file
   string dcbpath = dcb_file_oss.str();
 
-  ostringstream rncb_file_oss;
-  rncb_file_oss << lndir << "/generation" << generation+1 << "_rncb.csv";  //name of rstnoise cb file
-  string rncbpath = rncb_file_oss.str();
-
   Agent *agent = new Agent();  //learning census
   agent->init_episodes();
 
@@ -245,28 +241,19 @@ void GeneticAlgorithm::evaluation(Score *evo_score, ContextBandit *cbandit, stri
     ncb_print << "noise," << "met/noise," << "cbuse/noise," << "cbeffect/noise," << "cbloss/noise" << endl;
     for (int n = 0; n < NOISE_MAX; ++n){
       ncb_print << n;
-      ncb_print << "," << agent->noise_met[n] << "," << agent->noise_cbuse[n] << "," << agent->noise_cbeffect[n] << "," << agent->noise_cbloss[n];
+      ncb_print << "," << agent->noise[n] << "," << agent->noise_met[n] << "," << agent->noise_cbuse[n] << "," << agent->noise_cbeffect[n] << "," << agent->noise_cbloss[n] << "," << agent->noise_delay[n];
       ncb_print << endl;
     }
     ncb_print.close();
 
     ofstream dcb_print(dcbpath.c_str());  //file io
     dcb_print << "delay," << "met/delay," << "cbuse/delay," << "cbeffect/delay," << "cbloss/delay" << endl;
-    for (int w = 0; w < WAITING_TIME; ++w){
+    for (int w = 0; w < WAITING_TIME+1; ++w){
       dcb_print << w;
-      dcb_print << "," << agent->delay_met[w] << "," << agent->delay_cbuse[w] << "," << agent->delay_cbeffect[w] << "," << agent->delay_cbloss[w];
+      dcb_print << "," << agent->delay[w] << "," << agent->delay_met[w] << "," << agent->delay_cbuse[w] << "," << agent->delay_cbeffect[w] << "," << agent->delay_cbloss[w] << "," << agent->delay_noise[w];
       dcb_print << endl;
     }
     dcb_print.close();
-
-    ofstream rncb_print(rncbpath.c_str());  //file io
-    rncb_print << "rstnoise," << "met/rstnoise," << "cbuse/rstnoise," << "cbeffect/rstnoise," << "cbloss/rstnoise" << endl;
-    for (int n = 0; n < NOISE_MAX; ++n){
-      rncb_print << n;
-      rncb_print << "," << agent->rstnoise_met[n] << "," << agent->rstnoise_cbuse[n] << "," << agent->rstnoise_cbeffect[n] << "," << agent->rstnoise_cbloss[n];
-      rncb_print << endl;
-    }
-    rncb_print.close();
 
   }
 

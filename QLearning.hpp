@@ -47,7 +47,7 @@ class Reinforcement {
   double next_dataset[INPUTCELL + OUTPUTCELL];
 
   void init_state();
-  void interval(SOM &som);
+  void interval();
   int greedy();
   int qsoftmax(double data[], NN &mlp);
   int qmax(double data[], NN &mlp);
@@ -61,7 +61,6 @@ class Reinforcement {
   int met;
   int punish;
   int noise;
-  int rstnoise;
   int wait;
 
   // agent action score
@@ -70,13 +69,13 @@ class Reinforcement {
   double sum_ambiguity;
   double sum_delay;
 
-  void qlearning(ContextBandit *cbandit, NN &mlp, SOM &som);
+  void qlearning(ContextBandit *cbandit, NN &mlp);
   void set_parameter(unordered_map<string, double> hyper_parameter);
 };
 //==========================================================================//
 
 //====================================== RL class realization =====================================//
-void Reinforcement::qlearning(ContextBandit *cbandit, NN &mlp, SOM &som) {
+void Reinforcement::qlearning(ContextBandit *cbandit, NN &mlp) {
   if(CHKRL) delay(DELAYTIME);
   init_state();  // all state initialize
 
@@ -87,10 +86,9 @@ void Reinforcement::qlearning(ContextBandit *cbandit, NN &mlp, SOM &som) {
     memory_state[i] = cbandit->stimulus_image[cbandit->stimulus_num][i];
   }
   if (CHKRL){display_input(); delay(DELAYTIME);}
-  som.exposure(memory_state);
 
   // Waiting phase and bit invert noise
-  if(WAITING_TIME) interval(som);
+  if(WAITING_TIME) interval();
   //^^^// Input&Waiting phase phase //^^^//
   // vvv// Action selection phase //vvv//
   double q_or_greedy = real_urand();
@@ -134,8 +132,6 @@ void Reinforcement::qlearning(ContextBandit *cbandit, NN &mlp, SOM &som) {
     cb_flg = 1; cb_repeat++; delay_count = 0; ambiguity = 0;
     for (int i = 0; i < stmsize; ++i) memory_state[i] = stimulus_state[i];
     if (CHKRL){display_input(); delay(DELAYTIME);}
-    som.exposure(memory_state);
-    for(int i = 0; i < stmsize; ++i) memory_state[i] = som.somout[i];
 
     // input next dataset
     for (int i = 0; i < INPUTCELL + OUTPUTCELL; ++i) next_dataset[i] = 0;  // 0 reset
@@ -220,7 +216,7 @@ void Reinforcement::set_parameter(unordered_map<string, double> hyper_parameter)
 }
 
 
-void Reinforcement::interval(SOM &som){
+void Reinforcement::interval(){
   if(WTRANDOM){delay_count = abs(int_urand()) % WAITING_TIME + 1;}else{delay_count = WAITING_TIME;}
   sum_delay = delay_count;
   wait = delay_count;
@@ -235,11 +231,7 @@ void Reinforcement::interval(SOM &som){
         }
       }
     }
-    ambiguity += som.maintain(memory_state);
-    for (int i = 0; i < stmsize; ++i) {
-      memory_state[i] = som.somout[i];
-      if(memory_state[i] != stimulus_state[i]) ++rstnoise;
-    }
+    ambiguity += noise;
   }
   sum_ambiguity = ambiguity;
 
@@ -353,7 +345,6 @@ void Reinforcement::init_state() {
   punish = 0;
   delay_count = 0;
   noise = 0;
-  rstnoise = 0;
   wait = 0;
   ambiguity = 0;
   sum_ambiguity = 0;

@@ -43,10 +43,9 @@ double CB_COST = 0.1; //cost of cheking behavior
 double IC_COST = 0.05; //cost of delay count ability
 double MTM_COST = 0.1;  //cost of metamemory
 double STM_COST = 0.01;  //cost of short-term memory
-int EXPOSURE = 0; //time of pre-exposure
 
-int GENE_LENGTH = 116+STM_DEV;  //ic(0or1, 1), mtm(0or1, 1), stm_size(1-5, 4), epsiron greedy(0.1-1.0, 9), learning rate(0.1~1.0, 9), discount rate(0.1-1.0, 9), hidden cell of NN(3-30, 27), learning rate of NN(1-10, 9), size of SOM(6-30, 12), learning rate of SOM(1-10, 9)
-int TOTAL_PHENOTYPE = 10;  //ic, mtm, stmsize, epsiron-g, learningrate, discountrate, hiddencell, learningrateNN, somsize, learningrateSOM
+int GENE_LENGTH = 95+STM_DEV;  //ic(0or1, 1), mtm(0or1, 1), stm_size(1-5, 4), epsiron greedy(0.1-1.0, 9), learning rate(0.1~1.0, 9), discount rate(0.1-1.0, 9), hidden cell of NN(3-30, 27), learning rate of NN(1-10, 9)
+int TOTAL_PHENOTYPE = 8;  //ic, mtm, stmsize, epsiron-g, learningrate, discountrate, hiddencell, learningrateNN
 int TOTAL_LN_RESULTS = 7;
 int TOTAL_EVO_RESULTS = 22;
 //===================================================================================================//
@@ -100,8 +99,6 @@ int main(int argc, char** argv){
 			SOFTMAX = atoi(argv[opc+1]); opc++;
 		}else if(strcmp(s, "-inf") == 0){   //constant for agent
 			INFO_SIZE = atoi(argv[opc+1]); opc++;
-		}else if(strcmp(s, "-exp") == 0){   //constant for agent
-			EXPOSURE = atoi(argv[opc+1]); opc++;
 		}else if(strcmp(s, "-stmi") == 0){  //constant for agent
 			STM_INIT = atoi(argv[opc+1]); opc++;
 		}else if(strcmp(s, "-cbc") == 0){
@@ -158,7 +155,6 @@ int main(int argc, char** argv){
   fout_FM << "#define STM_DEV " << INFO_SIZE-STM_INIT << endl;
   fout_FM << "#define STM_INIT " << STM_INIT << endl;
   fout_FM << "#define CB_COST " << CB_COST << endl;
-  fout_FM << "#define EXPOSURE " << EXPOSURE << endl;
   fout_FM << "#define IC_COST " << IC_COST << endl;
   fout_FM << "#define MTM_COST " << MTM_COST << endl;
   fout_FM << "#define STM_COST " << STM_COST << endl;
@@ -178,21 +174,21 @@ int main(int argc, char** argv){
 	fout_FM << "\"EVALUATION\"" << "," << "\"AGENTS\"" << "," << "\"GENERATION\"" << "," << "\"MT_RATE\"" << ",";
 	fout_FM << "\"CHOICES\"" << "," << "\"STIMULI\"" << "," << "\"INFO_SIZE\""<< "," << "\"WAITING_TIME\"" << ",";
 	fout_FM << "\"NOISE_RATE\"" << "," << "\"REWARD\"" << "," << "\"PUNISH\"" << ",";
-	fout_FM << "\"ACTION_LIMIT\"" << "," << "\"SOFTMAX\"" << "," << "\"WTRANDOM\"" << "," << "\"STM_INIT\"" << "," << "\"CB_COST\"" << "," << "\"EXPOSURE\"" << ",";
+	fout_FM << "\"ACTION_LIMIT\"" << "," << "\"SOFTMAX\"" << "," << "\"WTRANDOM\"" << "," << "\"STM_INIT\"" << "," << "\"CB_COST\"" << ",";
 	fout_FM << "\"IC_COST\"" << "," << "\"MTM_COST\"" << "," << "\"STM_COST\"";
 	fout_FM << "};" << endl;
 	fout_FM << "double parameter_value[" << TOTAL_PARAMETER << "] = {";
 	fout_FM << EVALUATION << "," << AGENTS << "," << GENERATION << "," << MT_RATE << ",";
 	fout_FM << CHOICES << "," << STIMULI << "," << INFO_SIZE << "," << WAITING_TIME << ",";
 	fout_FM << NOISE_RATE << "," << REWARD << "," << PUNISH << ",";
-	fout_FM << ACTION_LIMIT << "," << SOFTMAX << ","  << WTRANDOM << "," << STM_INIT << "," << CB_COST << "," << EXPOSURE << ",";
+	fout_FM << ACTION_LIMIT << "," << SOFTMAX << ","  << WTRANDOM << "," << STM_INIT << "," << CB_COST << ",";
 	fout_FM << IC_COST << "," << MTM_COST << "," << STM_COST;
 	fout_FM << "};" << endl;
 
   fout_FM << "string phenotype_name[" << TOTAL_PHENOTYPE << "] = {";
 	fout_FM << "\"ic\"" << "," << "\"mtm\"" << "," << "\"stmsize\"" << ",";
 	fout_FM << "\"qleps\"" << "," << "\"qlalpha\"" << "," << "\"qlgamma\""<< ",";
-	fout_FM << "\"hiddencell\"" << "," << "\"nnalpha\"" << "," << "\"somsize\"" << "," << "\"somalpha\"";
+	fout_FM << "\"hiddencell\"" << "," << "\"nnalpha\"";
 	fout_FM << "};" << endl;
 
   fout_FM << "string ln_results_name[" << TOTAL_LN_RESULTS << "] = {";
@@ -206,12 +202,12 @@ int main(int argc, char** argv){
 	fout_FM << "\"RateCB\"" << "," << "\"UseCB\"" << "," << "\"EffectCB\"" << "," << "\"LossCB\"" << "," << "\"Ambiguity\"" << ",";
   fout_FM << "\"ShareIC\"" << "," << "\"ShareMTM\"" << "," << "\"ShareICMTM\"" << "," << "\"ShareBare\"" << ",";
   fout_FM << "\"STMsize\"" << ",";
-	fout_FM << "\"QLeps\"" << "," << "\"QLalp\"" << "," << "\"QLgam\"" << "," << "\"hidcell\"" << "," << "\"nnalp\"" << "," << "\"somsize\"" << "," << "\"somalp\"" << ",";
+	fout_FM << "\"QLeps\"" << "," << "\"QLalp\"" << "," << "\"QLgam\"" << "," << "\"hidcell\"" << "," << "\"nnalp\"" << ",";
   fout_FM << "\"hamming\"" << "};" << endl;
 
   fout_FM << "string directory_name = \"" << "ev" << EVALUATION << "_ag" << AGENTS << "_gn" << GENERATION << "_mt" << MT_RATE;
   fout_FM << "_inf" << INFO_SIZE << "_act" << ACTION_LIMIT << "_sm" << SOFTMAX << "_st" << STIMULI << "_ch" << CHOICES;
-  fout_FM << "_wt" << WAITING_TIME << "_wtr" << WTRANDOM << "_nr" << NOISE_RATE << "_stmi" << STM_INIT << "_rw" << REWARD << "_pn" << PUNISH << "_cbc" << CB_COST << "_exp" << EXPOSURE;
+  fout_FM << "_wt" << WAITING_TIME << "_wtr" << WTRANDOM << "_nr" << NOISE_RATE << "_stmi" << STM_INIT << "_rw" << REWARD << "_pn" << PUNISH << "_cbc" << CB_COST;
   fout_FM << "_icc" << IC_COST << "_mtmc" << MTM_COST << "_stmc" << STM_COST << "\";";  //basic file name;
 
   fout_FM.close();
@@ -244,7 +240,6 @@ int main(int argc, char** argv){
   cout << "#define WTRANDOM " << WTRANDOM << endl;
   cout << "#define STM_DEV " << INFO_SIZE-STM_INIT << endl;
   cout << "#define CB_COST " << CB_COST << endl;
-  cout << "#define EXPOSURE " << EXPOSURE << endl;
   cout << "#define IC_COST " << IC_COST << endl;
   cout << "#define MTM_COST " << MTM_COST << endl;
   cout << "#define STM_COST " << STM_COST << endl;
@@ -261,7 +256,7 @@ int main(int argc, char** argv){
 	cout << " -ev " << EVALUATION << " -ag " << AGENTS << " -gen " << GENERATION << " -mt " << MT_RATE;
 	cout << " -ch " << CHOICES << " -st " << STIMULI << " -inf " << INFO_SIZE << " -wt " << WAITING_TIME;
 	cout << " -nr " << NOISE_RATE << " -rw " << REWARD << " -pn " << PUNISH;
-	cout << " -act " << ACTION_LIMIT << " -sm " << SOFTMAX << " -wtr " << WTRANDOM << " -stmi " << STM_INIT << " -cbc " << CB_COST << " -exp " << EXPOSURE;
+	cout << " -act " << ACTION_LIMIT << " -sm " << SOFTMAX << " -wtr " << WTRANDOM << " -stmi " << STM_INIT << " -cbc " << CB_COST;
 	cout << " -icc " << IC_COST << " -mtmc " << MTM_COST << " -stmc " << STM_COST << endl;
   cout << endl;
 }

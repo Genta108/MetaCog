@@ -83,7 +83,6 @@ void NN::init_nn(int i, int h, int o, double a){
   outputcell = o;
   nnalpha = a;
 
-
   initwh();
   initwo();
 }

@@ -176,6 +176,15 @@ void GeneticAlgorithm::expression(int gene[]){
   value = 1;
   while(l < STM_DEV+116) if(gene[l++]) value += 1;  //learning rate of SOM < 10
   phenotype[phenotype_name[9]] = value;
+
+  value = 0.05;
+  while(l < STM_DEV+135) if(gene[l++]) value += 0.05;  //IC inhiv < 1
+  phenotype[phenotype_name[10]] = value;
+
+  value = 0.05;
+  while(l < STM_DEV+154) if(gene[l++]) value += 0.05;  //MTM inhiv < 1
+  phenotype[phenotype_name[11]] = value;
+
 }
 
 
@@ -214,7 +223,8 @@ void GeneticAlgorithm::evaluation(Score *evo_score, ContextBandit *cbandit, stri
       agent->cbuse, agent->cbeffect, agent->cbloss, agent->ambiguity,
       agent->ic_agent, agent->mtm_agent, agent->icmtm_agent, agent->bare_agent,
       phenotype["stmsize"], phenotype["qleps"], phenotype["qlalpha"], phenotype["qlgamma"],
-      phenotype["hiddencell"], phenotype["nnalpha"], phenotype["somsize"], phenotype["somalpha"], 0};
+      phenotype["hiddencell"], phenotype["nnalpha"], phenotype["somsize"], phenotype["somalpha"], 
+      phenotype["icinhiv"], phenotype["mtminhiv"], 0};
     evo_score->counting(results_container);
 
   }

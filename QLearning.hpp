@@ -33,7 +33,7 @@ class Reinforcement {
  private:
   // agent's parameter
   double alpha, gamma, epsiron;  // learning rate, discount rate, exploration rate
-  double ic, mtm, stmsize;
+  double ic, mtm, stmsize, icinhiv, mtminhiv;
 
   // agent's state & context
   int selected_action;
@@ -99,8 +99,8 @@ void Reinforcement::qlearning(ContextBandit *cbandit, NN &mlp) {
     greedy_flg = 1;
     for (int i = 0; i < stmsize; ++i) dataset[i] = memory_state[i];  // current stm state
     if (cb_flg) dataset[INFO_SIZE] = 0;
-    if (ic) dataset[INFO_SIZE+1] = delay_count/WAITING_TIME;
-    if (mtm) dataset[INFO_SIZE+2] = ambiguity/NOISE_MAX;
+    if (ic) dataset[INFO_SIZE+1] = delay_count*icinhiv;
+    if (mtm) dataset[INFO_SIZE+2] = ambiguity*mtminhiv;
 
     if (CHKRL){cout << "choice greedy" << endl; delay(DELAYTIME);}
     selected_action = greedy();
@@ -113,8 +113,8 @@ void Reinforcement::qlearning(ContextBandit *cbandit, NN &mlp) {
     // input NN dataset
     for (int i = 0; i < stmsize; ++i) dataset[i] = memory_state[i];  
     if (cb_flg) dataset[INFO_SIZE] = 1;
-    if (ic) dataset[INFO_SIZE+1] = delay_count/WAITING_TIME;
-    if (mtm) dataset[INFO_SIZE+2] = ambiguity/NOISE_MAX;
+    if (ic) dataset[INFO_SIZE+1] = delay_count*icinhiv;
+    if (mtm) dataset[INFO_SIZE+2] = ambiguity*mtminhiv;
 
     if (CHKRL){cout << "choice action by q-value" << endl; delay(DELAYTIME);}
     if (SOFTMAX) {
@@ -137,8 +137,8 @@ void Reinforcement::qlearning(ContextBandit *cbandit, NN &mlp) {
     for (int i = 0; i < INPUTCELL + OUTPUTCELL; ++i) next_dataset[i] = 0;  // 0 reset
     for (int i = 0; i < stmsize; ++i) next_dataset[i] = memory_state[i];  // next stm state
     if (cb_flg) next_dataset[INFO_SIZE] = 1; 
-    if (ic) next_dataset[INFO_SIZE+1] = delay_count/WAITING_TIME;
-    if (mtm) next_dataset[INFO_SIZE+2] = ambiguity/NOISE_MAX;
+    if (ic) next_dataset[INFO_SIZE+1] = delay_count*icinhiv;
+    if (mtm) next_dataset[INFO_SIZE+2] = ambiguity*mtminhiv;
 
     mlp.output[0] = mlp.forward(0, dataset);
 
@@ -205,6 +205,7 @@ void Reinforcement::qlearning(ContextBandit *cbandit, NN &mlp) {
   }
 }
 
+
 void Reinforcement::set_parameter(unordered_map<string, double> hyper_parameter) {
   alpha = hyper_parameter["qlalpha"];
   epsiron = hyper_parameter["qleps"];
@@ -213,6 +214,8 @@ void Reinforcement::set_parameter(unordered_map<string, double> hyper_parameter)
   ic = hyper_parameter["ic"];
   mtm = hyper_parameter["mtm"];
   stmsize = hyper_parameter["stmsize"];
+  icinhiv = hyper_parameter["icinhiv"];
+  mtminhiv = hyper_parameter["mtminhiv"];
 }
 
 

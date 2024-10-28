@@ -38,7 +38,7 @@ using namespace std;
 #define GENE_LENGTH 116
 #define TOTAL_PHENOTYPE 10
 #define TOTAL_LN_RESULTS 7
-#define TOTAL_EVO_RESULTS 22
+#define TOTAL_EVO_RESULTS 24
 
 //constant for Q-network
 #define INPUTCELL 8

@@ -45,9 +45,9 @@ double MTM_COST = 0.1;  //cost of metamemory
 double STM_COST = 0.01;  //cost of short-term memory
 
 int GENE_LENGTH = 95+STM_DEV;  //ic(0or1, 1), mtm(0or1, 1), stm_size(1-5, 4), epsiron greedy(0.1-1.0, 9), learning rate(0.1~1.0, 9), discount rate(0.1-1.0, 9), hidden cell of NN(3-30, 27), learning rate of NN(1-10, 9)
-int TOTAL_PHENOTYPE = 8;  //ic, mtm, stmsize, epsiron-g, learningrate, discountrate, hiddencell, learningrateNN
+int TOTAL_PHENOTYPE = 10;  //ic, mtm, stmsize, epsiron-g, learningrate, discountrate, hiddencell, learningrateNN
 int TOTAL_LN_RESULTS = 7;
-int TOTAL_EVO_RESULTS = 22;
+int TOTAL_EVO_RESULTS = 24;
 //===================================================================================================//
 
 
@@ -188,7 +188,8 @@ int main(int argc, char** argv){
   fout_FM << "string phenotype_name[" << TOTAL_PHENOTYPE << "] = {";
 	fout_FM << "\"ic\"" << "," << "\"mtm\"" << "," << "\"stmsize\"" << ",";
 	fout_FM << "\"qleps\"" << "," << "\"qlalpha\"" << "," << "\"qlgamma\""<< ",";
-	fout_FM << "\"hiddencell\"" << "," << "\"nnalpha\"";
+	fout_FM << "\"hiddencell\"" << "," << "\"nnalpha\"" << "," ;
+	fout_FM << "\"icinhiv\"" << "," << "\"mtminhiv\"" << "," ;
 	fout_FM << "};" << endl;
 
   fout_FM << "string ln_results_name[" << TOTAL_LN_RESULTS << "] = {";
@@ -202,7 +203,7 @@ int main(int argc, char** argv){
 	fout_FM << "\"RateCB\"" << "," << "\"UseCB\"" << "," << "\"EffectCB\"" << "," << "\"LossCB\"" << "," << "\"Ambiguity\"" << ",";
   fout_FM << "\"ShareIC\"" << "," << "\"ShareMTM\"" << "," << "\"ShareICMTM\"" << "," << "\"ShareBare\"" << ",";
   fout_FM << "\"STMsize\"" << ",";
-	fout_FM << "\"QLeps\"" << "," << "\"QLalp\"" << "," << "\"QLgam\"" << "," << "\"hidcell\"" << "," << "\"nnalp\"" << ",";
+	fout_FM << "\"QLeps\"" << "," << "\"QLalp\"" << "," << "\"QLgam\"" << "," << "\"hidcell\"" << "," << "\"nnalp\"" << "," << "\"icinhiv\"" << "," << "\"mtminhiv\"" << ",";
   fout_FM << "\"hamming\"" << "};" << endl;
 
   fout_FM << "string directory_name = \"" << "ev" << EVALUATION << "_ag" << AGENTS << "_gn" << GENERATION << "_mt" << MT_RATE;

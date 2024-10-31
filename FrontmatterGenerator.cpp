@@ -44,7 +44,7 @@ double IC_COST = 0.05; //cost of delay count ability
 double MTM_COST = 0.1;  //cost of metamemory
 double STM_COST = 0.01;  //cost of short-term memory
 
-int GENE_LENGTH = 95+STM_DEV;  //ic(0or1, 1), mtm(0or1, 1), stm_size(1-5, 4), epsiron greedy(0.1-1.0, 9), learning rate(0.1~1.0, 9), discount rate(0.1-1.0, 9), hidden cell of NN(3-30, 27), learning rate of NN(1-10, 9)
+int GENE_LENGTH = 133+STM_DEV;  //ic(0or1, 1), mtm(0or1, 1), stm_size(1-5, 4), epsiron greedy(0.1-1.0, 9), learning rate(0.1~1.0, 9), discount rate(0.1-1.0, 9), hidden cell of NN(3-30, 27), learning rate of NN(1-10, 9)
 int TOTAL_PHENOTYPE = 10;  //ic, mtm, stmsize, epsiron-g, learningrate, discountrate, hiddencell, learningrateNN
 int TOTAL_LN_RESULTS = 7;
 int TOTAL_EVO_RESULTS = 24;

@@ -169,21 +169,13 @@ void GeneticAlgorithm::expression(int gene[]){
   while(l < STM_DEV+95) if(gene[l++]) value += 1;  //learning rate of NN < 10
   phenotype[phenotype_name[7]] = value;
 
-  value = 6;
-  while(l < STM_DEV+107) if(gene[l++]) value += 2;  //size of SOM <= 30
+  value = 0.05;
+  while(l < STM_DEV+114) if(gene[l++]) value += 0.05;  //IC inhiv < 1
   phenotype[phenotype_name[8]] = value;
 
-  value = 1;
-  while(l < STM_DEV+116) if(gene[l++]) value += 1;  //learning rate of SOM < 10
+  value = 0.05;
+  while(l < STM_DEV+133) if(gene[l++]) value += 0.05;  //MTM inhiv < 1
   phenotype[phenotype_name[9]] = value;
-
-  value = 0.05;
-  while(l < STM_DEV+135) if(gene[l++]) value += 0.05;  //IC inhiv < 1
-  phenotype[phenotype_name[10]] = value;
-
-  value = 0.05;
-  while(l < STM_DEV+154) if(gene[l++]) value += 0.05;  //MTM inhiv < 1
-  phenotype[phenotype_name[11]] = value;
 
 }
 

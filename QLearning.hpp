@@ -157,7 +157,7 @@ void Reinforcement::qlearning(ContextBandit *cbandit, NN &mlp) {
     //---------------- reward function -------------------//
     if(cbandit->judge(selected_action - 1) > 0){
       met = 1;
-      reinforcer = cbandit->judge(selected_action - 1) / (1 + CB_COST * cb_repeat);  //-checking behavior
+      reinforcer = cbandit->judge(selected_action - 1);  //-checking behavior
     }else if(cbandit->judge(selected_action - 1) < 0){
       punish = 1;
       reinforcer = cbandit->judge(selected_action - 1);
@@ -260,7 +260,11 @@ int Reinforcement::qsoftmax(double data[], NN &mlp) {
   sum = 0;
   for (int i = 0; i < CHOICES + 1; ++i) {  // i = 0: information seeking
     action_q[i] = 0;
-    action_q[i] = mlp.forward(i, e);
+    if(i == 0){
+      action_q[i] = mlp.forward(i, e)/(1+CB_COST); // i = 0: information seeking
+    }else{
+      action_q[i] = mlp.forward(i, e);
+    }
     if (CHKRL) cout << "actionq[" << i << "]: " << action_q[i] << endl;
     sum += exp(action_q[i]);
   }
@@ -292,7 +296,11 @@ int Reinforcement::qmax(double data[], NN &mlp) {
 
   // comparing q-value
   for (int i = 0; i < CHOICES + 1; ++i) {
-    action_q = mlp.forward(i, e);
+    if(i == 0){
+      action_q = mlp.forward(i, e)/(1+CB_COST);
+    }else{
+      action_q = mlp.forward(i, e);
+    }
     if (CHKRL) cout << "actionq[" << i << "]: " << action_q << endl;
 
     if (action_maxq < action_q) {

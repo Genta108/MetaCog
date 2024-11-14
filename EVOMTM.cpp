@@ -45,7 +45,7 @@ string myroute = "/mnt/data_complex/meta_cognition/";  //Ryzen PC
 //string myroute = "/mnt/DataComplex/MetaCog/";  //Intel WS
 //string myroute = "/Users/toyagenta/Dropbox/D02_DataComp/";  //mac
 
-string version = "EVOMTM_v5.4_SCORE";
+string version = "EVOMTM_v5.5_SCORE";
 //====================================================================================================//
 
 namespace{

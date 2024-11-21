@@ -215,8 +215,7 @@ void GeneticAlgorithm::evaluation(Score *evo_score, ContextBandit *cbandit, stri
       agent->cbuse, agent->cbeffect, agent->cbloss, agent->ambiguity,
       agent->ic_agent, agent->mtm_agent, agent->icmtm_agent, agent->bare_agent,
       phenotype["stmsize"], phenotype["qleps"], phenotype["qlalpha"], phenotype["qlgamma"],
-      phenotype["hiddencell"], phenotype["nnalpha"], phenotype["somsize"], phenotype["somalpha"], 
-      phenotype["icinhiv"], phenotype["mtminhiv"], 0};
+      phenotype["hiddencell"], phenotype["nnalpha"], phenotype["icinhiv"], phenotype["mtminhiv"], cbandit->hamming()};
     evo_score->counting(results_container);
 
   }

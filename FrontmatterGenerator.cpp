@@ -189,7 +189,7 @@ int main(int argc, char** argv){
 	fout_FM << "\"ic\"" << "," << "\"mtm\"" << "," << "\"stmsize\"" << ",";
 	fout_FM << "\"qleps\"" << "," << "\"qlalpha\"" << "," << "\"qlgamma\""<< ",";
 	fout_FM << "\"hiddencell\"" << "," << "\"nnalpha\"" << "," ;
-	fout_FM << "\"icinhiv\"" << "," << "\"mtminhiv\"" << "," ;
+	fout_FM << "\"icinhiv\"" << "," << "\"mtminhiv\"";
 	fout_FM << "};" << endl;
 
   fout_FM << "string ln_results_name[" << TOTAL_LN_RESULTS << "] = {";

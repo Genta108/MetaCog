@@ -104,6 +104,8 @@ namespace{
       evo_dir_oss << myroute << version << "mtm/" << directory_name;  //name of data directory
     }else if(RL_SW){
       evo_dir_oss << myroute << version << "rl/" << directory_name;  //name of data directory
+    }else if(ICLESS){
+      evo_dir_oss << myroute << version << "icless/" << directory_name; 
     }else{
       evo_dir_oss << myroute << version << "/" << directory_name;  //name of data directory
     }

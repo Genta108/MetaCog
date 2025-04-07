@@ -12,6 +12,7 @@ using namespace std;
 int MTM_SW = 0;
 int IC_SW = 0;
 int RL_SW = 0;
+int ICLESS = 0;
 
 //simulation
 int TOTAL_PARAMETER = 20; //Total parameter of this simulation
@@ -65,6 +66,8 @@ int main(int argc, char** argv){
       RL_SW = atoi(argv[opc+1]); opc++;
     }else if(strcmp(s, "-isw") == 0){
       IC_SW = atoi(argv[opc+1]); opc++;
+    }else if(strcmp(s, "-icl") == 0){
+      ICLESS = atoi(argv[opc+1]); opc++;
     }else if(strcmp(s, "-msw") == 0){
       MTM_SW = atoi(argv[opc+1]); opc++;
     }else if(strcmp(s, "-ev") == 0){       //constant for grobal
@@ -125,6 +128,7 @@ int main(int argc, char** argv){
   fout_FM << "#define RL_SW " << RL_SW << endl;
   fout_FM << "#define IC_SW " << IC_SW << endl;
   fout_FM << "#define MTM_SW " << MTM_SW << endl;
+  fout_FM << "#define ICLESS " << ICLESS << endl;
 
   fout_FM << "#define TOTAL_PARAMETER " << TOTAL_PARAMETER << endl;
   fout_FM << "#define SAMPLE " << SAMPLE << endl;

@@ -142,6 +142,7 @@ void GeneticAlgorithm::expression(int gene[]){
 
   if(RL_SW){phenotype["ic"] = 0; phenotype["mtm"] = 0;}
   if(IC_SW){phenotype["ic"] = 1; phenotype["mtm"] = 0;}
+  if(ICLESS){phenotype["ic"] = 0;}
   if(MTM_SW){phenotype["ic"] = 0; phenotype["mtm"] = 1;}
   if(IC_SW && MTM_SW){phenotype["ic"] = 1; phenotype["mtm"] = 1;}
 
